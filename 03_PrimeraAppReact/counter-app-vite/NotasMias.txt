@@ -1,0 +1,13 @@
+yarn create vite -> Yarn para uso local (Creacion)
+
+Ejecutar: yarn dev
+
+JSX -> Cuando tenemos codigo JS y XML que seria React pero si solo 
+        dice JS igual funcionaria
+
+imr + tab para hacer importacion
+
+rafc + tab para crear la base de un componente ya con exportacion
+
+yarn add prop-types -> Para instalar los PropTypes
+

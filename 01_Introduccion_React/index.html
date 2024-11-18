@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Cargat React -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <title>React App</title>
+</head>
+<body>
+    <div class="root"></div>
+
+    <!-- Con BABEL hacemos que traduce el codigo moderno por un codigo que pueda ser soportado por cualquier navegador WEB-->
+    <script type="text/babel">
+        const element = document.querySelector("#root");
+        const nombre = "Nadien"
+        const h1 = <h1>Hola { nombre }</h1>;
+
+        ReactDOOM.render( h1, element );
+
+    </script>
+    
+</body>
+</html>
