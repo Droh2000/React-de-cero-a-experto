@@ -2,7 +2,18 @@ import { useState } from "react";
 
 // Cada componente puede tener su propio estado, Hooks (UeStates)
 // En este caso queremos manejar el estado del Input (Conforme la persona escriba queremos obtener sus valores)
-export const AddCategory = () => {
+/*
+    Aqui estamos recibiendo el "setCategories" que le mandamos desde el GiftExpert
+    tenemos que implementar la misma logica de la funcion "onAddCategory" de GiftExpert
+    solo que ahora se manda lo que se encuentre en el "inputValue" (Mantiendo lo valores que ya se tenian
+    y agregandole el nuevo valor)
+
+    Por defecto tenemos el objeto de props pero lo mas comun es que se desetructure
+*/
+//export const AddCategory = ({ setCategories }) => {
+
+// Esto seria de otra forma usando la propiedad "onNewCategory" 
+export const AddCategory = ({ onNewCategory }) => {    
     // El estado inicial del Input es un String vacio
     const [InputValue, setInputValue] = useState('');
 
@@ -16,6 +27,26 @@ export const AddCategory = () => {
     const onSubmit = (event) => {
         // Con el evento que recibimos es como podemos acceder para prevenir que el formulario nos actualize la pagina
         event.preventDefault();
+        /*
+            Mandamos a llamar la funcion que recibimos como parametro pero si insertamos el nuevo valor
+            "InputValue" nos va a sobrescribir el arreglo anterior de "GifExpert"
+            Entonces como esta funcion es de UseSate le podemos mandar un CallBack donde vamos a tener el arreglo
+            anterior de las categorias e insertamos el nuevo valor seguido de la desestructuracion del arreglo
+
+            Para insertar correctamente tenemos que hacer varias validaciones
+                Con '.trim()' le limpiamos los espacios adelante y atras, ademas verificamos si esto tiene que tener almenos una letra
+                Le agregamos directamente el RETURN por que si no cumple simplemente se salga de la funcion
+        */
+        if(InputValue.trim().length <= 1) return;
+
+        //setCategories( categories => [InputValue, ...categories] );
+
+        // De la otra forma
+        // Solo mandamos a llamar esta propiedad y le mandamos el InputValue ya limpio y validado
+        onNewCategory( InputValue.trim() );
+
+        // Ya insertado el nuevo valor, le podemos limpiar donde se almaceno el texto
+        setInputValue('');
     }
 
     return (
@@ -44,6 +75,7 @@ export const AddCategory = () => {
                     value={InputValue}
                     onChange = {onInputChange}
                 />
+                <button type="submit">Agregar</button>
             </form>
         </>
     )
