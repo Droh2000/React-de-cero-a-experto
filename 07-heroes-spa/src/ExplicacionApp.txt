@@ -1,0 +1,137 @@
+
+Esta va a ser una aplicacion donde todavia no vamos a programar de manera avanzada un Login
+pero si va a tener un pequeno login el cual nos sirva ver lo de las rutas privadas y rutas publicas
+
+Va a tener dos modulos:
+    Heroes: Va toda la funcionalidad de la APP (Paginas, Hooks, Componentes, Helpers )
+        Los Assets los vamos a manejar como recursos estaticos que no cambian 
+    Auth: Colocamos todo lo relacionada a la autenticacion (En esta parte tambien podemos tener el mismo tipo de carpetas)
+
+    Esta estructura de carpetas es buena cuando el proyecto es de mediano a Grande
+
+
+Instalamos las Rutas: yarn add react-router-dom
+    Implementamos el BrowserRoute (en el main.jsx) porque estamos desarrollando una pagina Web
+
+Defenimos las Rutas
+    No seria bueno que en el HeroesApp.jsx tengamos definidas todas las rutas porque ese no es el trabajo de ese Componente
+    Asi que nos creamos otro directorio "router" donde ahi va a estar la informacion de las rutas de la aplicacion
+    donde practicamente sera otro componente "AppRouter.jsx" normalmente este es el nombre que se le da al router principal
+    de la aplicacion
+    (Este Lo Implementamos en el "HeroeApp.jsx")
+
+Implementacion del NavBar
+    Queda a nuestra decicion donde poner ese NavBar, podria ser dentro de la carpeta de "Heroes" porque ese navbar solo va a aparecer
+    cuando nosotros estamos autenticados o podria ser dentro de la carpeta de "auth"
+    o tambien nos podemos crear otro modulo "ui" de interfaz grafica (Esto seria otro modulo y componente de nuestra aplicacion)
+
+    Aqui creamos el "Navbar.jsx" dentro de la carpeta de "Components", en algunos casos puede que tengamos muchos componentes ahi y tengamos
+    que hacer la exportacion de cada uno de ellos para este caso lo mejor es crear el archivo de barril (index.js) para tener ahi todas nuestras
+    exportaciones (Si sabemos que el nombre de nuestros componentes van a ser unicos y no se van a repetir entonces nos podemos crear el archivo
+    de barril dentro de la carpeta "ui" y no dentro de "components" y asi la ventaja de esto es que no hacemos un EXPORT por cada componente sino
+    que es un EXPORT por toda la carpeta de "components")
+
+    De todos modos tenemos que crear el archivo de barril dentro de "components" porque el index.js de "ui" toma como referencia ese archivo para saber
+    los componentes a exportar
+
+    El NavBar lo implementamo dentro del AppRouter.jsx
+
+En el "AppRouter.jsx" tenemos varias importaciones que son los componentes Pages asi que creamos los archivos de barril por modulo
+donde los MarvelPages y DcPAges vengan de la misma importacion y el Login desde la carpeta principal
+
+
+Creacion de un Segundo router
+
+    Si nos encontramos en la pantalla del Login no tiene sentido mostrar el NavBar con las opciones ni lo del nombre de usuario y el Logout
+    lo que queremos hacer es que todo lo que es el modulo del Login (u otros modulos) tengan una estructura HTML diferente y las opciones de
+    Marvel y DC mantengan el mismo diseno reutilizable
+
+    Para esto modificamos el "AppRouter" ya que por defecto el "NavBar" se encuentra de manera global en todas la rutas
+    lo que podriamos hacer es que arriba podriamos implementar una condicion basica llamando un metodo que en teoria funcionaria eso tambien
+    pero no es conveniente hacerlo de esa manera porque puede que sea una estructura cumpletamente diferente donde tengamos las rutas
+    colocadas en ciertos DIV o cierto espacio 
+
+    Empezamos trabajando con los directorios
+
+    Como las rutas las queremos dividir en dos (Una para Heroes y otra para auth, estos nos sirve para caulquier cantidad de rutas que queramos tener)
+    vamos a crearnos dentro de la carpeta de "Heroes" otra carpeta "routes" (siendo este para las rutas que van a funcionar dentro del modulo)
+    y el "router" externo es para las rutas principales.
+
+        Dentro creamos el "HeroeRoutes.jsx"
+            Este archivo contiene el Navbar y todo el Routes como "AppRouter" pero quitamos el Route de Login
+            Ahora en el "AppRoute" quitamos las rutas de Marvel, Dc y el del comodin "/"
+
+Funcionalidad del Logout
+
+    En ui/components/Navar -> Aqui es donde tenemos el boton de Logout podriamos implementar ahi la logica pero hay que tratar de que los componentes
+    sean sencillos, asi que creamos una funcion aparte
+
+Lista de Heroes
+
+    La forma de mostrar la pagina de Marvel como la DC literalmente el formato va a ser el mismo, entonces con esto ya deberiamos de pensar que esto seria
+    un componente que reutilizaremos
+
+    Para los heroes tenemos los datos en la Carpeta Data para no hacer peticiones HTTP 
+
+    Dentro de la carpteta "Helpers" creamos funciones para filtrar del DATA el heroe correspondiente a la empresa y en la carpetea de 
+    "Components" creamos el "HeroList" que es el componente que se reutilizara para las paginas de marvel o DC
+
+
+Proteccion de Rutas
+
+    Para la parte del Login y que el usuario no puede acceder a la URL del contenido si no esta autenticado
+
+    Necesitamos saber en todo momento si tenemos un usuario autenticado o no y toda la aplicacion nesesita saber 
+    si el usuario Existe o No, para eso vamos a requerir algun tipo de context en el cual tengamos nuestro proveedor de autenticacion
+    Siguiendo la estructura que tenemos en nuestro proyecto podria ser que queremos compartir informacion unicamente solo a nivel de los heroes
+    pero en este caso a pesar que es algo de autenticacion, la carpeta de "auth" tambien va a requerir compartir informacion a lo largo de toda
+    la aplicacion (Hay varias formas de estructurar esto)
+
+    Cuando pensemos en crearnos un Context podriamos ver que si solo esta realcionado a la autenticacion entonces lo podemos poner dentro de la carpeta de
+    "auth" pero tambien algunos crean un carpeta "Context" dentro de la carpeta "SRC" y dentro de esa carpeta tienen subcarpetas para cada uno de 
+    los modulos que utilizan ese contexto (Como esto es algo que esta relacionado directamente con la autenticacion entonces vamos a crearlo en la carpeta "auth")
+    Tambien creamos otra carpeta llamada "Types" que sera para cuando se esten disparando acciones a nuestro Reducer, entonces dentro de esa carpeta sepamos
+    cuales tipos vamos a tener y los vamos a tener centralizados, esto nos va a ayudar a que sapamos como lucen, que informacion tienen y para la parte del Testing
+
+    No nesesariamente cuando pensemos en un Context no obligatoriamente se va a usar Reducer, pero usualmente se requiere trabajar en un Reducer porque nos permite a
+    nosotros disparar acciones y manejar el estado de manera mas controlada
+
+    Empezamos creando el archivo types.js dentro de la carpeta Types
+        Ahi tenemos centralizados los posibles tipos de las acciones que se pueden realizar (Login/Logout)
+
+    Dentro de la carpeta "Contex" vamos a crear "AuthContext.jsx"
+    El que va a exponer la informacion va a ser el AuthProvider.jsx que esta dentro de esta misma carpeta, este utilia el AuthContext
+    con el objetivo que el Provider sea el que de la informacion a toda la aplicacion
+
+    Despues no creamos el Reducer quien es que va a manejar los estados (De igual forma podriamos usar un UseState en el AuthContext)
+    pero si queremos mas control sobre el estado es mejor un Reducer, este es el archivo "AuthReducer.js"
+
+    Al finalizar debemos de implementar el "AuthProvider" porque debe de ser vista por toda la aplicacion, para eso ajustamos las importaciones
+    en el archivo barril y despues en el "HeroesApp" que es un punto bastante Alto de la aplicacion, aqui utilizamos el AuthProvider
+        Con esto podemos proveer informacion a lo largo de toda la aplicacion y todos sus componentes y todos los hooks, cualquier cosa que este dentro
+        de nuestra App tendra a acceso a lo que el Provider nos este Regresando
+
+    
+    Rutas Privadas
+
+    Si no estamos autenticados en el Login y aunque escribamos en el Navegador la URL
+    del inicio de nuestra aplicacion no nos debe de permitir ingresar y nos debe regresar a la pagina
+    de login (Si no tenemos ningun usuario en el State no debe poder entrar)
+
+    Nuestro sistema de rutas que tenemos defenidas en el AppRouter.jsx donde tenemos nuestra de loggin y nuestra ruta 
+    que nos sirve para mostrar las demas rutas definidas en el "HeroesRoutes.jsx" 
+    En pocas palabras debemos de envolver las que son rutas publicas y rutas privadas 
+
+    Para hacer esto debemos de trabajar nuestra Routas como si fueran componentes de orden superior
+    (Pasandole al componente "Route" otros componentes hijos), seria como un Ruta la cual recibe rutas hijas dentro
+    De forma que para crearnos nuestras rutas privadas crearnos la estructura de pasarle rutas internas al "Routes"
+    y dependiendo si el usuario esta autenticado o no mostrar lo que seria un "Outlet"
+
+    Dentro de la carpeta de Router creamos los componentes para las rutas privadas y publica
+
+
+
+
+
+
+

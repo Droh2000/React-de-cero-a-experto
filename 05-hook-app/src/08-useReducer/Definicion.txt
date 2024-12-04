@@ -1,0 +1,54 @@
+
+
+            Que es un Reducer
+
+El Reducer es solo una funcion comun y corriente, ademas no puede ser asyncrona
+otra cosa es que debe de ser una funcion Pura (Es decir todo lo que esa funcion realize
+debe de resolverse de manera interna), se debe de retornar siempre un nuevo estado 
+(Esto ya lo hemos hecho con los otros Hook donde para incrementar el contaador no hacemos
+Counter++ sino que usamos la funcion setCounter(Counter + 1), de esa manera estamos regresando
+un nuevo valor al contador y no estamos mutando el estado anterior), Usualmente solo se reciben
+dos argumentos que son el estado inicial (initialState) y la accion a ejecutar 
+
+Por Ejemplo: Si queremos trabajar con una lista de tareas por hacer (que se llama "TODOS")
+entonces vamos a nombrar la funcion: "todoReducer()".
+
+Lo de ser una funcion pura es que:
+    * No debe de tener Efectos Secundarios: Esto es que la funcion debe de resolver todo lo que se pida
+        internamente sin nesecidad de llamar a otras funciones
+    * No debe de tener tareas asyncronas: Para que la funcion sea mas sencilla 
+    * Debe de retornar siempre un nuevo estado: No se debe de mutar nunca el estado
+    * No debe de llamar el localStorage o sessionStorage internamente dentro del Reduce, que
+        aunque se puede hacer, estos dos (local y session) son tareas sincronas que nos rompe
+        las reglas anteriores porque el llamado a esas funciones son considerados efectos secundarios
+        que pueden fallar y en ese caso no regresariamos un nuevo State sino que seria un Error y 
+        al regresar cualquier cosa que no sea un estado la aplicacion va a fallar
+    * Para modificar el Stage no se debe de requerir mas que una accion que puede tener no o un argumento
+
+Ejemplo de como tendremos el Codigo del Reduce:
+
+    Tenemos un arreglo con un objeto donde todos los elementos de nuestra lista TODO que seria el estado inicial
+    este estado se lo mandamos a la funcion como el estado y aparte tendremos otro argumento de las acciones
+    y en si la funcion solo regresa el State
+
+La idea de hacer esto es tener controlado en un solo lugar todas las acciones que modifican el estado de la aplicacion
+y asi nosotros podremos ver a nivel general todas las posibles modificaciones que la aplicacion puede realizar 
+Siempre que estemos con una aplicacion en el momento que veamos que tiene uno o varios Reducers, ahi es donde estan las acciones
+de la aplicacion, ahi veriamos las acciones que puede realizar y la logica de la manipulacion de cada accion
+
+Ciclo de vida de un Reduce
+    * Al iniciar la aplicacion vamos a tener un estado inicial (Es lo que toma para cargar la informacion)
+        En este caso por ejemplo seria un arreglo con TODOs
+    * Luego el componente se va a mostrar en pantalla, el State le pasaria esos TODOs a la pagina o a la vista
+        para que los muestre en pantalla
+    * Supongamos que el usuario quiere agregar un nuevo TODOs pero la pagina no habla directamente con el State
+        porque si lo hicieramos asi, lo estariamos mutando y esa accion no se permite hacer, entonces la pagina o
+        la vista va a crear una accion que es la de agregar un nuevo TODO y esa accion es la que se le manda al Reducer
+        - En el Reducer esta toda la logica de las acciones que puede realizar, si al reducer le mandamos una accion
+            que no esta programada simplemente regresa el Estado 
+            Entonces el reduce toma la accion y aplica la logica de la accion correspondiente, ejecuta ese procedimiento 
+            y ese procedimiento va a modificar el State el cual al cambiar va a notificar a la vista de que hay un nuevo TODO
+            o si hay un error igual le notifica
+    
+    La idea es que toda la informacion fluya en una sola via y de manera controlada
+    

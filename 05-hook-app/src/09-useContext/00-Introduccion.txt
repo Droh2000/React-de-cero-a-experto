@@ -1,0 +1,34 @@
+
+                Introduccion al Context
+
+Hasta en el momento en la carpeta 08-useReducer hemos estado trabajando en aplicaciones como el "TodoApp"
+que internmente tiene un componente que se llama "TodoList" y dentro esta el componente del "TodoItem"
+(Uno esta contenido dentro de otro), pero si necesitamos borrar un "TodoItem" la funcion que contiene esa
+logica llamada "handleDeleteTodo()" va a estar en el componente mas superior que seria "TodoApp" por consecuencia
+se tiene que pasar esa funcion del "TodoApp" al "TodoList" (Este no hace nada con esa funcion) que de ahi se 
+la pasa a los "TodoItem" y ahi es donde se llama esa funcion, con lo cual el "TodoList" es solo un puente para 
+pasar esa funcion al componente hijo.
+
+Supongamos que tenemos dos pantallas un "HomePage" (Nesecita un usuario) y "Login" (Va a establecer el usuario)
+el inconveniente es que tanto el Login como el HomePage no estan contenidos uno dentro del otro por lo cual esa 
+comunicacion que vimos anteriormente no funcionara, ahora ¿Como le mandamos la informacion del usuario al HomePage?
+Una forma de resolver esto es que creemos un espacio a un nivel superior en el cual vamos a tener el usuario y una
+manera de establecer el usuario ahi adentro (Ese espacio lo vamos a llamar Context) por lo cual el "Login" va a llamar
+el metodo de "setUser" (Que esta dentro del Context) para establecer el usuario y ahora el HomePage y caulquier otra
+pagina que nesescita esa informacion del usuario va a leer ese Context para obtener los ultimos valores actualizados
+de ese usuario
+
+Aqui vamos a ver el Router de REACT para crear aplicaciones que tengan multiples pantallas 
+
+CONTEXT: es un contenedor de informacion que va a estar en un nivel superior que le va a permitir a los componentes
+e hijos de leer, poder leer y ejecutar metodos que se encuentren dentro de ese CONTEXT
+
+Para usar el componente useContext de REACT necesitamos crear ese Contexto
+
+                
+                Preparar la Aplicacion para el uso de Rutas
+
+Hay que ir a la pagina de React Router y en la documentacion vamos a la opcion de la instalacion
+Ahi nos van a dar unas lineas de comando a ejecutar (En este caso como estamos usando YARN tenemos que buscar ese,
+si no esta en la documentacion lo buscamos en google)
+
