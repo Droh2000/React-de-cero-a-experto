@@ -10,8 +10,10 @@ export const JournalPages = () => {
             Si queremos que afecte el estilo del HTML y el H1 se comporte como un TITULO entonces
             cambiamos el component por "variant"
         */
-        <Typography variant='h1'>
-            JODEEER
-        </Typography>
+       <>
+            <Typography variant='h1'>
+                JODEEER
+            </Typography>
+        </>
     )
 }
