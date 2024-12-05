@@ -2,6 +2,7 @@ import { Grid2, Typography, TextField, Button, Link } from '@mui/material';
 import { Google } from '@mui/icons-material';
 // Le cambiamos el Nombre al Link del REACT para que no ocurran conflictos con el de Material
 import { Link as RouterLink } from 'react-router-dom';
+import { AuthLayout } from '../layout/AuthLayout';
 
 /*
     El diseno de este y el del Registro es LITERALMENTE el mismo, lo unico que cambia
@@ -9,34 +10,13 @@ import { Link as RouterLink } from 'react-router-dom';
 */
 export const LoginPages = () => {
     return (
-        // El Grid es como un DIV pero viene con propiedades interesantes 
-        <Grid2 
-            container
-            spacing={ 0 } // Para que no haiga ningun espacio entre los hijos
-            direction="column" // Esto es como definirle el FlexBox
-            alignItems="center"
-            justifyContent="center"
             /*
-                Para definir los colores en Material le podemos defininr el SX (Style Extended)
-                    con este tenemos acceso al Tema que deinimos en el Theme.Provider
-                tambien tenemos un XS pero este hace referencia a al Tamano de la pantalla
-
-                Aqui lo definimos para que use todo el tamano que tenga disponible y el color de fondo
-                sera establecido por lo que ya definimos en el PurpleTheme en la parte del objeto de Primary
+                Para no tener este codigo Duplicado vamos a crear el LAYOUT
+                ya que la pagina de Register es muy parecida del Login, solo cambia pequenas cosas en el Login
+                En este caso creamos el AuthLayout.jsx 
+                Implementacion del Layout y solo le metemos la parte que va a cambiar en la pantalla 
             */
-           sx={{ minHeight: '100vh', backgroundColor: 'primary.main', padding: 4 }}
-        >
-            {/*
-                Aqui definimos la Caja que queremos poner en el medio de la pantalla
-            */}
-            <Grid2 
-                item = "true"
-                className = 'box'    
-                xs = { 3 } // Este es el tamano de la pantalla
-                sx = {{ backgroundColor: 'white', padding: 3, borderRadius: 2 }} // Este es el estilo
-            >
-                <Typography variant='h5' sx={{ mb:1 }} >Login</Typography>
-
+            <AuthLayout title="Login">
                 <form>
                     <Grid2 container direction='column'>
                         {/* Cada Grid de tipo ITEM toma por defecto el tamano de los TextField  
@@ -119,9 +99,6 @@ export const LoginPages = () => {
 
                     </Grid2>
                 </form>
-
-            </Grid2>
-        </Grid2>
+            </AuthLayout>
     )
 }
-// Para no tener este codigo Duplicado vamos a crear el LAYOUT
