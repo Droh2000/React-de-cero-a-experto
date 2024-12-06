@@ -67,3 +67,35 @@ Resumen del Flujo de la infomacion:
         - Redux Toolkit: Es una serie de herramientas que nos va a ayudar a nosotros a que la implementacion del patron Redux en las 
                          aplicaciones de React sea mucho mas sencillo porque ya esta el Toolkit creando todo por nosotros.
                          Con este vamos a crear y manejar el "Store" (Cualquier informacion que se requiera se va tomar del Store)
+
+Despues de creado el pryecto:
+  Instalamos:
+    - yarn add @reduxjs/toolkit react-redux
+
+Aclaraciones del Store, la idea es que cuando se requiera cualquier pieza del estado, es decir si el SideBar esta abierto, si el usuario 
+esta autenticado o cualquier informacion que se requiera compartir con otros componentes entonces en el Store es donde se almacenara 
+estas piezas de informacion, no nesesariamente porque estamos trabajando con Redux siginifica que todo lo vamos a colocar en el Store ya 
+que puede que requiramos algun estado local en algun componente y en ese caso podemos usar el UseState o UseReducer (Cualquier otra forma 
+de mantener el estado en un componente), un ejemplo serian condiciones como de un boton habilitado o deshabilitado (Debemos saber que cosas
+meter en el Store y cuales mantener en un componente en un estado local), la idea es que cuando se requiera culquier informacion del estado
+se busque dentro del Store
+
+  Creamos la carpeta "Store" donde vamos a tenerlo
+
+  Despues de esto ocupamos proveer el Store a todos los componentes de React
+    Aqui vamos a aplicar el patron cuando teniamos el Provider y lo poniamos en el main.jsx
+    osea tenemos que crearnos un proveedor (Se pone en el Root de la aplicacion porque queremos que nuestro Store este de manera global en toda 
+    la aplicacion "main.jsx") a este como parametro le mandamos el Store que creamos
+
+  Tenemos que crear el Reducer
+    Aqui vamos a aplicar el ejemplo del Contador evitando usar el State Local para utilizar el Store, ahora aqui entran lo que se llaman Slice
+    donde podemos crear rapidamente una serie de reducers, definir el initialState y un nombre con el cual las acciones van a salir disparadas
+    hacia ese lugar e identificar esa accion en el Redux
+
+      Para esto creamos la carpeta "Slice" dentro de "Store" y dentro subcarpetas para cada uno de los diferentes Slice que vamos a tener
+      (El Slice es en si una funcion que recibe un objeto).
+      Primero creamos el counterSlice.js
+    
+  Para utilizarlo lo colocamos en el Store
+    Dentro del Store.js en la parte del "reducer" ahi le damos el nombre que queramos para que sea identificado luego de ahi le pasamos el counterSlice
+    que creamos pero apuntando al ".reducer"
