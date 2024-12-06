@@ -99,3 +99,9 @@ se busque dentro del Store
   Para utilizarlo lo colocamos en el Store
     Dentro del Store.js en la parte del "reducer" ahi le damos el nombre que queramos para que sea identificado luego de ahi le pasamos el counterSlice
     que creamos pero apuntando al ".reducer"
+
+  Ahora sigue utilizar la pieza del Store que nos interesa que en este caso es el "counter", de aqui utilizamos dos Hooks que son:
+    el "useSelector" para cuando nosotros ocupamos seleccionar o tomar alguna pieza del State y tenemos el "useDispatch" para tener acceso
+    a la funcion "dispatch" la cual nos despacha acciones que solo las mandamos a llamar y ya. (Con estos Hooks interactuamos con nuestro Store)
+        Esto lo implementamos en el Archivo "App.jsx"
+
