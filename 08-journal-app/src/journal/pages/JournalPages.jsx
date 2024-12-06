@@ -1,5 +1,7 @@
-import { Typography } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { JournalLayout } from '../layout/JournalLayout';
+import { NoteView, NothingSelectedView } from '../views';
+import { AddOutlined } from '@mui/icons-material';
 
 export const JournalPages = () => {
     return (
@@ -12,13 +14,31 @@ export const JournalPages = () => {
             cambiamos el component por "variant"
         */
        <JournalLayout>
-            <Typography variant='h1'>
-                JODEEER
-            </Typography>
-
-            {/* Debemos de mostrar algo cuando no hay nada seleccionado */}
-
+            {/* 
+                Debemos de mostrar algo cuando no hay nada seleccionado 
+                Este componente ya viene con su separacion gracias al Layout que definimos
+                (El mismo diseno del Login Register)
+            */}
+            <NothingSelectedView />
+            
             {/* Esto es lo que vamos a mostrar cuando haya una nota */}
+            {/*<NoteView/>*/}
+            
+            {/* Boton Flotante */}
+            <IconButton
+                size='large'
+                sx={{
+                    color: 'white',
+                    backgroundColor: 'error.main',':hover':{ backgroundColor: 'error.main', opacity:0.9 },
+                    position: 'fixed',
+                    right: 50,
+                    bottom: 50
+
+                }}
+            >
+                <AddOutlined sx={{ fontSize: 30 }} />
+            </IconButton>
+            
             
         </JournalLayout>
     )

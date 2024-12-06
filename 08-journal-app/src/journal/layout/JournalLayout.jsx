@@ -1,5 +1,5 @@
-import { Box } from '@mui/system';
-import { NavBar } from '../components';
+import { Box, Toolbar } from '@mui/material';
+import { NavBar, SideBar } from '../components';
 
 // Queremos colocar la barra lateral siempre en un tamano especifico  (NavBar)
 // Estos valores se los vamos a mandar al componente para que el NavBar no se muestre encima del Texto
@@ -11,12 +11,12 @@ export const JournalLayout = ({ children }) => {
         <Box sx={{ display: 'flex' }}>
             <NavBar drawerWidth={ drawerWidth } />
 
-            {/* SideBar */}
+            <SideBar drawerWidth={ drawerWidth } />
 
             {/* Es como si definimos la etiqueta Main de HTML */}
             <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
-
-                {/* Toolbar */}
+                {/* Este nos da el espacio nesesario para que la parte de JournalApp y el boton de salir salgan despues del Nombre */}
+                <Toolbar />
 
                 { children }
 
