@@ -1,0 +1,69 @@
+
+
+        Que es Redux
+
+Es un contenedor predecible del estado de nuestra aplicacion, es una forma de controlar donde
+se encuentra la informacion de la aplicacion en todo momento y tambien nos ayuda a que la modificacion
+de la informacion siempre sea en una sola vida de manera predecible, con el objetivo de preevenir cambios
+accidentales en la misma.
+
+Esta es una forma de mantener el estado de la aplicacion y es independiente al Framework o libreria
+Entre los conceptos de Redux estan:
+    - Store: Aqui se conoce como la fuente unica de la verdad (Aqui es donde esta la informacion que 
+             nuestros componentes van a consumir). Los componentes van a ir al Store a traer la informacion
+             que nesecitan para trabajar 
+    
+    Ya antes habiamos visto el Reducer que es una funcion pura que maneja el estado, el estado le sirve la 
+    informacion a la pagina o la vista para que muestre la informacion deseada (La vista no modifica el State
+    directamente, solo lo Lee y cuando se requiere hacer una modificacion a la misma entonces la pagina o vista
+    genera una Accion, esa accion es enviada al Reducer y el Reducer ejecuta la accion) despues que se ejecute
+    esa accion en el Reducer (Esto es como en el Redux que es una funcion pura) entonces el Reducer genera un
+    nuevo estado que ese estado es el que se le notifica a la vista.
+
+    Ahora veamos lo de arriba pero usando Redux, Entonces siempre vamos a tener un State que va a ser dado por
+    el Store, ese Estado cumple la misma funcion que antes, donde tenemos nuestra vista, esta requiere informacion
+    que la obtiene del State del Store, muestra la informacion y hace lo que tenga que hacer con los datos, pero
+    al momento que se requiere disparar alguna modificacion o hacer alguna accion, nuevamente se vuelve a crear un
+    Action, esta accion cae en lo que se llama un "Dispatcher" que es este quien recibe dicha accion, la abre, la 
+    analiza y se la manda a un Reducer Especial, ese Reducer es una combinacion de todos los reducers que va a tener
+    la aplicacion (Es decir vamos a tener un Reducer para manejar la autenticacion, otro para los TODOS, otro para las
+    tareas pendientes, otro para entradas, etc), ese Reducer contiene un monton de Reducer pequeños de los cuales el 
+    dispacher le va a decir "Okey tengo esta accion, Quien de ustedes la hace?" Detecta el Reducer que hace la accion
+    y ese reducer ejecuta la accion, hace lo que tenga que hacer y genera un Nuevo State, Este State es el que notifica 
+    a la vista. (Todo este proceso que acabamos de ver, solo aplica si todo el proseso es Sincrono, en nigun momento 
+    ocupamos peticiones HTTP o tareas Asincronas, Aqui todo se ejecuta de forma casi instantanea).
+
+    En el momento que la Vista requiera una accion asyncrona por ejemplo realizar una autenticacion para el Login, entonces
+    esto no es algo que de manera instantanea sepamos que hacer, se tiene que esperar a recibir la informacion, entonces
+    si disparamos esa accion, esta va a caer en el Dispacher pero va a detectar que es algo asyncrono entonces se tiene que 
+    implementar un Middleware (Puede que tengamos varios middleware), este Middleware es el que recibe la tarea asyncrona
+    va a ejecutar la accion (Llama al API, trae los datos, va a esperar la respuesta) y cuando tiene la respuesta, ese API
+    se lo notifica al Middleware que esta dentro del Dispacher por lo cual cuando se recibe la informacion se lo va a mandar
+    ya con todo el resultado final obtenido, se lo manda al reducer Principal ("Ya se tiene esta accion, ya tenemos el usuario
+    autenticado, ya esta todo listo, Quien va a realizar esta accion?") que modifica el State y regresa uno nuevo, todo lo
+    demas sigue siendo lo mismo.
+
+Resumen del Flujo de la infomacion:
+    - Para una tarea Syncrona: Ocurre un cambio en la pantalla o alguna informacion se cambio, etc. (Ya tenemos nuestro State
+      y tenemos la vista), la vista dispara la accion, la accion se crea y se envia al Dispacher, este detecta que es una tarea
+      sincrona, entonces se lo manda al Reducer, este detecta cual de todos maneja esa accion que se recibio, Ejecuta la accion
+      el reducer encargado, hace la modificacion del State y este es recibido en la Vista
+
+    - Para una tarea Asyncrona: La vista crea la accion, esta se manda al dispacher que detecta que es asyncrona entonces el 
+      middleware se encarga de hacerlo, que manda la accion (Suponiendo que es una peticion HTTP) a un API, cuando se resuelve
+      entra nuevamente al dispacher y de ahi se lo manda al Reducer, el encargado lo recibe y hace la accion, modificando el State
+      y regresa ese nuevo state a la vista
+
+    
+    Ahora en React tenemos varias cosas 
+
+        - Redux: Es el patron en el cual se basa en crear nuevos estados basado en Reducers, estos crean los nuevos estados y esos
+                 estados tambien son producto con las acciones que son recibidas en los Reducers
+        
+        - React Redux: Era la forma tradicional con la cual se trabaja Redux dentro de React, el inconveniente es que hay mucho codigo
+                        que teniamos que escribir si queriamos que funcionara algo, principalmente para tareas asincronas nos teniamos
+                        que crear todo manualmente
+        
+        - Redux Toolkit: Es una serie de herramientas que nos va a ayudar a nosotros a que la implementacion del patron Redux en las 
+                         aplicaciones de React sea mucho mas sencillo porque ya esta el Toolkit creando todo por nosotros.
+                         Con este vamos a crear y manejar el "Store" (Cualquier informacion que se requiera se va tomar del Store)
