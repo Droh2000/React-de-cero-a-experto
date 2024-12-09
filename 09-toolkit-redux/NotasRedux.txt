@@ -105,3 +105,32 @@ se busque dentro del Store
     a la funcion "dispatch" la cual nos despacha acciones que solo las mandamos a llamar y ya. (Con estos Hooks interactuamos con nuestro Store)
         Esto lo implementamos en el Archivo "App.jsx"
 
+Como para todo lo que es Redux vamos a estar usando Slices, al final de cuentas el codigo basico siempre va a ser el mismo para todos los Slices
+que requiramos, asi que lo mejor es que nos creemos un Snipper donde ya venga el codigo basico
+  Pasos:
+    - Ctrl+Shift+P
+    - Configure User Snippets
+    - Elegimos "javascript"
+    - Editamos el archivo JS del VScode
+
+
+Peticiones Asincronas
+  - Vamos a usar la APi de "pokeapi.co"
+  - Para esto nos creamos su Reducer para menajar la informacion de los reducer, las acciones, el estado inicial, el nombre a dar a la pieza del store
+  - Despues en el Store le decimos y le creamos un nuevo espacio llamado "pokemons" y le pasamos el Slice que creamos
+    (Todo esto es mas rapido que crearse el useReducer, el reducer, las acciones, la implementacion del Provider en el main, etc )
+
+  Thunks: Es una accion que es asincrona que dispara otra accion cuando se resuelve la peticion asincrona
+          Estos los podemos crear dentro del mismo slice, estos queremos que sean como funciones que despachan otra accion, puede que tengamos
+          muchas acciones que sean asincronas (Un Thunk es una funcion que va a ejectuar alguna traea asincrona y cuando termina ya sea exitosa
+          o con errores va a disparar una accion a nuestro reducer) en pocas palabras cuando el Thunk se ejecute va a llamar a los Reducer que tengamos
+          segun sea el caso
+
+        Para tener mas limpio el Slide vamos a crear los Thunks en un arhcivo aparte llamado "thunks.js"
+        Este thunk lo mandamos a llamar a "PokemonApp.js"
+
+  Para hacer la llamada al API vamos a usar AXIOs porque nos permite hacer ma configuracion
+      Se tiene que instalar: yarn add axios
+      Despues creamos la carpeta: src/api y dentro la implementacion de Axios
+
+

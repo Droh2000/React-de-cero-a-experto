@@ -2,7 +2,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { increment } from './store/slices/counter/counterSlice';
+import { increment, decrement, incrementBy } from './store/slices/counter/counterSlice';
 
 function App() {
   // Requerimos leer algo del Store para eso esta el UseSelector, dentro de este tenemos una funcion
@@ -27,15 +27,24 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>count is {counter}</h1>
       <div className="card">
         {/*
             Cuando se hace click en el boton mandamos a llamar el Dispatch y la accion a ejecutar es la de increment
             como una funcion para que se ejecute (Con esto ya va a funcionar el contador con Redux)
          */}
         <button onClick={() => dispach( increment() )}>
-          count is {counter}
+          Increment
         </button>
+        
+        <button onClick={() => dispach( decrement() )}>
+          Decrement
+        </button>
+
+        <button onClick={() => dispach( incrementBy(2) )}>
+          Increment by {2}
+        </button>
+
       </div>
     </>
   )
