@@ -133,4 +133,27 @@ Peticiones Asincronas
       Se tiene que instalar: yarn add axios
       Despues creamos la carpeta: src/api y dentro la implementacion de Axios
 
+  
+    RTK Query
+
+      Es algo que se integra nativamente con Redux el cual se utiliza para hacer peticiones como llamadas a Endpoints, no es un remplazo
+      de FetchAPI ni de AXIOS (Podemos usar estos dos con RTK query), lo que nos ayuda es evitar traer informacion duplicada si ya se 
+      encuentra almacenada en el Cache esa peticion. La primera vez es mucho codigo (Mucha configuracion) podriamos decir que es mucho para
+      hacer una peticion HTTP, lo que pasa es que no solo nos maneja la peticion sino que  maneja el Cache, nos crea CustomHook y muchas 
+      otras cosas para utilizarlo no hay que importar nada mas si ya estamos trabajando con el ReduxToolkit
+      
+      Para demostracion empezamos creando dentr de SRC un nuevo componente: TodoApp.jsx y lo implementamos dentro del "main.jsx"
+      (El RTK query a pesar que va a terminar creando ciertas piezas en nuestro Store (Si podriamos buscar informacion ahi) la verdad es que utiliza
+      sobre todo para controlar las peticiones HTTP, basicamente una forma de usarlo es traer la peticion HTTP, obtenemos los datos y despues
+      disparamos una accion para establecer los datos), el RTK Query esta hecho para optimizar las peticiones HTTP
+
+      Ahora dentro de la carpeta del Store creamos la subcarpeta API y ahi creamos el archivo todosApi.js
+
+      Despues de esto nos falta configurar algo en el Store porque la idea es que siga los mismo lineamientos de Redux, donde disparemos acciones
+      y estas creen nuevos estados, asi se renderizan nuevamente los componentes y todo esto lo hace de manera automatica
+      Nos vamos al Store.js, de aqui implementamos el consumo en el TodoApp.jsx
+
+      
+
+
 
