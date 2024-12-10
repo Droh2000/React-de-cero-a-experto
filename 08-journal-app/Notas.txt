@@ -1,0 +1,18 @@
+
+    Despues del desarrollo de toda la interface toca la implementacion de REDUX
+
+    Instalamos REDUX en el directorio del proyecto:
+        - yarn add @reduxjs/toolkit react-redux
+    
+    Creamos nuestro Store en: /src/store/store.js
+        Esta es nuestra fuente central de la aplicacion
+
+    Implementamos el Proveedor de nuestro Store que lo podriamos colcar en el Main.jsx
+    antes del BrowserRouter para que este tambien tenga acceso al estado de nuestra aplicacion
+    usualmente el Estado es lo mas alto de toda la APP porque nosotros queremos que toda la aplicacion
+    sepa como esta el estado de si misma.
+    Tembien lo podemos colocar en el "JournalApp.jsx", esto queda a nuestra discrecion siempre y cuando
+    este en un punto muy alto porque si lo colocamos en una parte baja y queremos acceder no vamos a
+    poder porque no existe nigun padre que contenga el Store
+
+        Nosotros lo colocamos en el main.jsx el Provider y le pasamos el Store que creamos como parametro
