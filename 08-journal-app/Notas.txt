@@ -16,3 +16,10 @@
     poder porque no existe nigun padre que contenga el Store
 
         Nosotros lo colocamos en el main.jsx el Provider y le pasamos el Store que creamos como parametro
+
+    Dentro de la carpeta Store creamos la subcarpeta "Auth" donde vamos a tener todo lo relacionado al Store
+    que es el apartado especifico de la autenticacion, dentro creamos el archivo "authSlice.js"  
+    Aqui es donde usamos el Sniper de "reduxSlice" para obtener el codigo Base
+        Despues lo implementamos en el Store.js -> Con esto ya esta listo para ser consumido
+    
+
