@@ -1,14 +1,59 @@
-import { Grid2, Typography, TextField, Button, Link } from '@mui/material';
+import { Grid2, Typography, TextField, Button, Link, Alert } from '@mui/material';
 import { Google } from '@mui/icons-material';
 // Le cambiamos el Nombre al Link del REACT para que no ocurran conflictos con el de Material
 import { Link as RouterLink } from 'react-router-dom';
 import { AuthLayout } from '../layout/AuthLayout';
-
+import { useForm } from '../../hooks/useForm';
+import { useDispatch, useSelector } from 'react-router-dom';
+import { checkingCredetianls } from '../../store/auth/authSlice';
+import { startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth/thunks';
+import { useMemo } from 'react';
 /*
     El diseno de este y el del Registro es LITERALMENTE el mismo, lo unico que cambia
     es un formulario entonces podemos reutilizar todo esto
 */
 export const LoginPages = () => {
+
+    // Debemos de tener cuidad que al estar abierta la ventana del PopUp de Google el usuario no deba de poder volver a 
+    // hacer click en los botones, para esto obtenemos lo que nos interesa del Store
+    // Con el "status" vamos a evaluar y asi no obtenemos nigun error solamente se cambia al estado de no sutenticado
+    // Tomamos del Store el mensaje del Error
+    const { status, errorMessage } = useSelector( state => state.auth );
+
+    const dispatch = useDispatch(); // Lo usamos para las tareas asyncronas
+
+    // Con el uso del CustomHook le especificamos como queremos que lusca el formulario
+    const { email, password, onInputChange } = useForm({
+        // Solo le especificamos informacion de relleno
+        email: '',
+        password: ''
+    });
+
+    // Vamos a memorizar el resultado que obtenemos el "status", le ponemos como dependencia el Status
+    // para que cada vez que cambie se vuelva a recalcular el valor
+    const isAuthenticating = useMemo( () => status === 'checking', [status]);
+
+    // Estas dos funciones son siempre tareas asyncronas (Para esto creamos en /store/auth/thunks.js)
+    // Aqui esta tratando de autenticarse con Email y contrasena
+    const onSubmit = ( event ) => {
+        event.preventDefault();
+
+        // Implementar la logica en Login que al precionar el boton verifique el usuario y la constasena en Firebase
+        // Debemos de evualar el dispatch de la accion por el Thunks.js, esto seruia una accion asyncrona que haga 
+        // el proeses de autenticacion
+        // Para esto creamos en thunks.js las funciones de: startLoginWithEmailPassword
+        // y en la parte de providers.js creamos loginWithEmailPassword
+        // Entonces tenemos que hacer el Dispatch del Thunk que creamos que internamente esta va a llamar la que implementamos en el provider
+        
+        // Hacemos el dispatch de la accion que tenemos en el thunks.js y le mandamos el email y password
+        dispatch( startLoginWithEmailPassword({ email, password }));
+    }
+
+    // Disparar la parte de la autenticacion de Google
+    const onGoogleSignIn = () => {
+        dispatch( startGoogleSignIn() );
+    }
+
     return (
             /*
                 Para no tener este codigo Duplicado vamos a crear el LAYOUT
@@ -16,8 +61,8 @@ export const LoginPages = () => {
                 En este caso creamos el AuthLayout.jsx 
                 Implementacion del Layout y solo le metemos la parte que va a cambiar en la pantalla 
             */
-            <AuthLayout title="Login">
-                <form>
+            <AuthLayout title="Login">  
+                <form onSubmit={ onSubmit }>
                     <Grid2 container direction='column'>
                         {/* Cada Grid de tipo ITEM toma por defecto el tamano de los TextField  
                             Aqui le definimos que en pantalla pequenas tendra XS=12 que son 12 columnas
@@ -34,6 +79,9 @@ export const LoginPages = () => {
                                 type="email"
                                 placeholder='example@example.com'
                                 fullWidth
+                                name='email'
+                                value={ email }
+                                onChange={ onInputChange }
                             />
                         </Grid2>
 
@@ -43,7 +91,24 @@ export const LoginPages = () => {
                                 type="password"
                                 placeholder='Constraseña'
                                 fullWidth
+                                name='password'
+                                value={ password }
+                                onChange={ onInputChange }
                             />
+                        </Grid2>
+                        
+                        {/* Mostrar el mensaje de error cuando se equivoce que el usuario */}
+                        <Grid2 
+                            container
+                            display={ !!errorMessage ? '' : 'none'}
+                            sx={{ mt:1 }}
+                        >
+                            <Grid2
+                                item='true'
+                                xs={ 12 }
+                            >
+                                <Alert severity='error'>{ errorMessage }</Alert>
+                            </Grid2>
                         </Grid2>
 
                         {/* Esta parte va a contener los elementos, el spacing es entre los hijos  */}
@@ -55,7 +120,10 @@ export const LoginPages = () => {
                                 el boton ocupara todo el tamano)
                             */}
                             <Grid2 item='true' xs={ 12 } sm={ 6 }>
-                                <Button 
+                                {/* Los botones se van a deshabilitar si se esta autenticando osea se tiene abierta la ventana del PopUp de Google*/}
+                                <Button  
+                                    disabled={ isAuthenticating }
+                                    type='submit' // Este boton va a disparar el Submit del formulario
                                     variant='contained'
                                     fullWidth // Esto quiere decir que se extendera a todo el tamano que tenga el Padre que es el Grid Item
                                 >
@@ -64,9 +132,11 @@ export const LoginPages = () => {
                             </Grid2>
 
                             <Grid2 item='true' xs={ 12 } sm={ 6 }>
-                                <Button 
+                                <Button
+                                    disabled={ isAuthenticating } 
                                     variant='contained'
                                     fullWidth // Esto quiere decir que se extendera a todo el tamano que tenga el Padre que es el Grid Item
+                                    onClick={ onGoogleSignIn }
                                 >
                                     <Google />
                                     <Typography sx={{ ml:1 }} >Google</Typography>

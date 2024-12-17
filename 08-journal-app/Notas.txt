@@ -21,5 +21,23 @@
     que es el apartado especifico de la autenticacion, dentro creamos el archivo "authSlice.js"  
     Aqui es donde usamos el Sniper de "reduxSlice" para obtener el codigo Base
         Despues lo implementamos en el Store.js -> Con esto ya esta listo para ser consumido
+
+
+    Para esta ocacion utilizamos el Custom Hook del Formulario que ya habiamos creado y ademas vamos a expandirlo
+    para agregar verificaciones y validaciones, este lo creamos en: src/hooks/useForm.js lo creamos aqui porque esta de forma
+    global y no esta atado a alguna pieza de los modulos
+
+    De aqui nos vamos al LoginPage.jsx definimos como queremos que luzca el formulario, hay que recordar que en el 
+    store nos podemos crear como esta el Login pero en este caso no nos interesa mantener, ni hacer dispatch de acciones
+    ya que podemos manejar eso en el estado del componente porque solo ahi lo vamos a requerir, esa es la reazon por la
+    que implementamos un useState tradicional, no necesariamente porque estamos en REDUX siginifica que todo lo tenemos 
+    que implementar asi
+
+El backend que vamos a utilizar para la autenticacion sera FIREBASE
+    ademas FireBase lo vamos a usar para la parte de almacenamiento, que es una base de datos no relacional 
+        El codigo que nos da Firebase para configurar la aplicacion la metimos en: /src/firebase/config.js
+
+
+
     
 
