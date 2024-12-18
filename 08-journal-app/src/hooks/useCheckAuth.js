@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, logout } from '../store/auth/authSlice';
 import { FirebaseAuth } from '../firebase/config';
+import { startLoadingNotes } from '../store/journal/thunks';
 
 // Este Hook no regresa nada solo tiene que disparar lo que tenga que disparar 
 export const useCheckAuth = () => {
@@ -41,8 +42,10 @@ export const useCheckAuth = () => {
 
             // Si tenemos un usuario entonces aplicamos el dispatch del login (No es el StartLogin porque aqui ya tenemos el usuario)
             dispatch( login({ uid, email, displayName, photoURL }) );
-
             // Con esto el usuario al ingresar al Login ya permanecera Autenticado
+
+            // aqui nos damos cuenta si tenemos un nuevo usuario con sus datos respectivos
+            dispatch( startLoadingNotes() );
         })
     }, []);
 
