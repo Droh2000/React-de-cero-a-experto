@@ -70,9 +70,16 @@ export const journalSlice = createSlice({
       state.messageSaved = `${ action.payload.title }, actualizada correctamente`;
 
     },
+    // Para establecerle a la nota activa las imagenes cargadas
+    setPhotosToActiveNote: (state, action) => {
+      // Esparcimos las fotos anteriores y le contcatenamos  el arreglo con las nuevas imagenes
+      state.active.imageUrls = [ ...state.active.imageUrls, ...action.payload ]
+      // indicamos que se termino la carga
+      state.isSaving = false;
+    },
     // Elminar la nota del listado
     deleteNoteById: (state, action) => {
-
+  
     },
   },
 });
@@ -84,7 +91,8 @@ export const {
     setNotes,
     setSaving,
     updateNote,
-    deleteNoteById
+    deleteNoteById,
+    setPhotosToActiveNote,
 } = journalSlice.actions;
 
 // Despues de configurar la Base De Datos en Firebase (No se escribio aqui nada por hueva si quieres saber vuelve a ver el video en udemy)

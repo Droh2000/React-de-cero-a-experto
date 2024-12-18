@@ -3,8 +3,9 @@
 
 import { doc, collection, setDoc } from "firebase/firestore";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setSaving, updateNote } from "./journalSlice";
+import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from "./journalSlice";
 import { loadNotes } from "../../helpers/loadNotes";
+import { fileUpload } from "../../helpers/fileUpload";
 
 // Este boton esta en: /src/journal/pages/JournalPages.jsx
 export const startNewNote = () => {
@@ -121,5 +122,23 @@ export const startUploadingFiles = ( files = [] ) => {
         // Ponemos la aplicacion en estado de carga, asi ademas bloqueamos los botones
         dispatch( setSaving() );
         // Para no implementar toda la logica aqui en la carga de archivos mejor nos creamos un helper
+        // Queremos que esta funcion se dispare segun la cantidad de archivos por separado pero de manera simultanea
+        // Para hacer que todas se disparen asi 
+        const fileUploadPromises = [];// Esto es el arreglo de toas las promesas que queremos disparar
+        // En JS existe el Promise.All el cual nos sirve para disparar un monton de funciones que regresan promesas
+        // y cuando todas son resueltas entonces vamos a obtener la respuesta
+        for (const file of files) {
+            // Insertamos cada uno de los arcchivos al arreglo
+            fileUploadPromises.push( fileUpload( file ) );
+        }
+        // Disparamos el arreglo de promesas, cuando esto se resuleve vamos a tener un arreglo con cada una de las respuestas
+        const photoUrls = await Promise.all( fileUploadPromises );
+
+        // Ahora tomtemos eses arreglo de imagenes en la nota que esta activa porque esta es la que se 
+        // va a guardar con los URL
+        dispatch( setPhotosToActiveNote(photoUrls) );
+
+        // Con esto ya tenemos la imagenes en la nota activa y si pulsamos en Guedar las guardara en Firebase
+
     }
 }
