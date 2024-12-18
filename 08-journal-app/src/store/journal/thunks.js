@@ -139,6 +139,5 @@ export const startUploadingFiles = ( files = [] ) => {
         dispatch( setPhotosToActiveNote(photoUrls) );
 
         // Con esto ya tenemos la imagenes en la nota activa y si pulsamos en Guedar las guardara en Firebase
-
     }
 }

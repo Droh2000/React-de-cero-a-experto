@@ -161,8 +161,12 @@ export const NoteView = () => {
                     onChange={ onInputChange }
                 />
             </Grid2>
+            
+            {/* Mostrar las imagenes cargadas en la interface 
 
-            <ImageGallery/>
+                Aqui le mandamos las imagenes de la nota activa que tiene actualizada los URls
+            */}
+            <ImageGallery images={note.imageUrls} />
             
         </Grid2>
     )
