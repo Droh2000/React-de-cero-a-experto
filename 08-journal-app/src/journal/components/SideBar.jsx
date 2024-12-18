@@ -2,12 +2,16 @@ import { TurnedInNot } from '@mui/icons-material';
 import { Box, Drawer, Toolbar, Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, Grid2, ListItemText } from '@mui/material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { SideBarItem } from './SideBarItem';
 
 export const SideBar = ({ drawerWidth=240 }) => {
 
     // Tomamos el nombre del usuario que inicie sesion en la APP
     // Sabemos que siempre lo vamos a tener porque ya va a estar autenticado el usuario
     const { displayName } = useSelector( state => state.auth );
+
+    // Del State obtenemos las notas
+    const { notes } = useSelector( state => state.journal );
 
     return (
         // Vamos a crear como una barra de navegacion
@@ -32,23 +36,12 @@ export const SideBar = ({ drawerWidth=240 }) => {
 
                 <Divider/>
 
-                {/* Creamos una lista ficcticia */}
+                {/* Creamos un componente para mostrar la lista que mostrara las notas creadas por el usuario */}
                 <List>
                     {
-                        ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio'].map( text => (
-                            <ListItem key={ text } disablePadding>
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <TurnedInNot />
-                                    </ListItemIcon>
-
-                                    <Grid2 container>
-                                        <ListItemText primary={ text } />
-                                        <ListItemText secondary={ 'No se que poner' } />
-                                    </Grid2>
-
-                                </ListItemButton>
-                            </ListItem>
+                        notes.map( note => (
+                            // Esparcimos toda la note para usar las propiedades directamente dentro del componente
+                            <SideBarItem key={note.id} {...note}/>
                         ))
                     }
                 </List>
