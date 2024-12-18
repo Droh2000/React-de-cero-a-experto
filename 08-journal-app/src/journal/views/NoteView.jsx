@@ -1,11 +1,11 @@
-import { SaveOutlined, UploadOutlined } from "@mui/icons-material"
+import { DeleteOutline, SaveOutlined, UploadOutlined } from "@mui/icons-material"
 import { Button, Grid2, IconButton, TextField, Typography } from "@mui/material"
 import { ImageGallery } from "../components"
 import { useDispatch, useSelector } from "react-redux"
 import { useForm } from '../../hooks/useForm'; 
 import { useEffect, useMemo } from "react";
 import { setActiveNote } from "../../store/journal/journalSlice";
-import { startSaveNote, startUploadingFiles } from "../../store/journal/thunks";
+import { startDeleteNote, startSaveNote, startUploadingFiles } from "../../store/journal/thunks";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.css';
 import { useRef } from "react";
@@ -75,6 +75,11 @@ export const NoteView = () => {
         // Subir las imagenes a Cloudinary
         //  Como tenemos que llegar a un endpoint, hacer la peticion HTTP es una tarea asyncrona por lo tanto usamos Thonk
         dispatch( startUploadingFiles( target.files ) );
+    }
+
+    const onDelete = () => {
+        // Como la nota activa ya tiene el ID no ocupamos pasarle nada a esta funcion del Thunk
+        dispatch( startDeleteNote() )
     }
 
     return (
@@ -161,7 +166,23 @@ export const NoteView = () => {
                     onChange={ onInputChange }
                 />
             </Grid2>
-            
+                
+            {/* Boton para borrar una nota */}
+            <Grid2
+                container
+                justifyContent='end'
+            >
+                <Button
+                    onClick={ onDelete }
+                    sx={{mt:2}}
+                    color="error"
+                >
+                    <DeleteOutline/>
+                    Borrar
+                </Button>
+
+            </Grid2>
+
             {/* Mostrar las imagenes cargadas en la interface 
 
                 Aqui le mandamos las imagenes de la nota activa que tiene actualizada los URls

@@ -87,7 +87,10 @@ export const journalSlice = createSlice({
     },
     // Elminar la nota del listado
     deleteNoteById: (state, action) => {
-  
+      state.active = null;
+      // De todas las notas filtramos por aquella que tomamos por el ID
+      // Como estamos trabajando con redux toolkit esta sintaxis es permitida
+      state.notes = state.notes.filter( note => note.id !== action.payload);
     },
   },
 });

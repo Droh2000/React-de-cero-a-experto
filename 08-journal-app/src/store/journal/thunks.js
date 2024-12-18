@@ -1,9 +1,9 @@
 
 // Esto es el inicio del proceso (Esta accion se le metera al Dispatch cuando el usuario haga click en el boton de +)
 
-import { doc, collection, setDoc } from "firebase/firestore";
+import { doc, collection, setDoc, deleteDoc } from "firebase/firestore";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from "./journalSlice";
+import { addNewEmptyNote, deleteNoteById, savingNewNote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from "./journalSlice";
 import { loadNotes } from "../../helpers/loadNotes";
 import { fileUpload } from "../../helpers/fileUpload";
 
@@ -139,5 +139,21 @@ export const startUploadingFiles = ( files = [] ) => {
         dispatch( setPhotosToActiveNote(photoUrls) );
 
         // Con esto ya tenemos la imagenes en la nota activa y si pulsamos en Guedar las guardara en Firebase
+    }
+}
+
+export const startDeleteNote = () => {
+    // Le pasamos estos parametros porque ocupamos la informacion de la nota activa y del usuario activo
+    return async ( dispatch, getState ) => {
+        // Tomamos los datos que requerimos
+        const {uid} = getState().auth;
+        const {active:note} = getState().journal;
+        // Construir la referencia al documento que seria la URL de la BD de Firebase
+        const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${note.id}`);
+        // Elminamos la nota de la BD
+        await deleteDoc(docRef);
+        // Una ves se borra tenemos que limpiarla del Store (De nuestra data local)
+        // Aqui requerimos quitar la nota activa y eliminarla del arreglo de notas, asi ya no debe aperecer en la interface
+        dispatch( deleteNoteById(note.id) );
     }
 }
