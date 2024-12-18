@@ -1,6 +1,7 @@
 // Estas son acciones que podemos hacer dispatch que internamente tienen una tarea asincrona
 
 import { loginWithEmailPassword, registerUserWithEmailPassword, singInWithGoogle, logoutFirebase } from "../../firebase/providers";
+import { clearNotesLogout } from "../journal/journalSlice";
 import { checkingCredetianls, login, logout } from "./authSlice";
 
 // Cuando estemos en el LoginPage.jsx que se preciona al boton que llama la funcion onSubmit se debe de hacer el Dispatch de esta accion
@@ -74,6 +75,8 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
 export const startLogout = () => {
     return async (dispatch) => {
         await logoutFirebase();
+        // Para limpiar el rastro de las notas en el state
+        dispatch( clearNotesLogout() );
         // llamamos el logut para hacer la limpieza de toda nuetra aplicacion
         dispatch( logout() );
     }

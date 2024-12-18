@@ -77,6 +77,14 @@ export const journalSlice = createSlice({
       // indicamos que se termino la carga
       state.isSaving = false;
     },
+    clearNotesLogout: (state) => {
+      // Limpiar las notas al cerrar sesion
+      // Como es una accion sincrona la podemos impleemntar en el JounralSlice
+      state.isSaving = false;
+      state.messageSaved = '';
+      state.notes = [];
+      state.active = null;
+    },
     // Elminar la nota del listado
     deleteNoteById: (state, action) => {
   
@@ -93,6 +101,7 @@ export const {
     updateNote,
     deleteNoteById,
     setPhotosToActiveNote,
+    clearNotesLogout,
 } = journalSlice.actions;
 
 // Despues de configurar la Base De Datos en Firebase (No se escribio aqui nada por hueva si quieres saber vuelve a ver el video en udemy)
