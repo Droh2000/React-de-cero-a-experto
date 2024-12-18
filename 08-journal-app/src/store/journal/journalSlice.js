@@ -35,6 +35,7 @@ export const journalSlice = createSlice({
     setActiveNote: (state, action) => {
         // El payload es la nota que queremos establecer en pantalla para poder editar, actualizar y demas
         state.active = action.payload;
+        state.messageSaved = ''; // limpiamos el campo por si ya estaba con contenido
      },
     // Para cargar las notas
     setNotes: (state, action) => {
@@ -43,6 +44,7 @@ export const journalSlice = createSlice({
     // Para cuando se esten guardando las notas
     setSaving: (state) => {// No requerimos el action porque aqui solo lo vamos a establecer en Truth
       state.isSaving = true;
+      state.messageSaved = ''; // limpiamos el campo por si ya estaba con contenido
     },
     // Actualizar una nota
     updateNote: (state, action) => {
@@ -58,7 +60,15 @@ export const journalSlice = createSlice({
           return action.payload;
         }
         return note;
-      })
+      });
+      
+      // Debemos de saber cuando la nota se actualizo para mostrar mensajes de alerta indicando el hecho
+      // para esto creamos en el "initialState" de "JournalSlice" el campo del mensaje de guardado que lo rellenamos
+      // cuando se guardo la note
+      // Debemos estar pendiente por un effecto si este campo cambia, y cuando cambie disparar el mensaje
+      // Esta logica como es externa no se debe impleemntar aqui
+      state.messageSaved = `${ action.payload.title }, actualizada correctamente`;
+
     },
     // Elminar la nota del listado
     deleteNoteById: (state, action) => {

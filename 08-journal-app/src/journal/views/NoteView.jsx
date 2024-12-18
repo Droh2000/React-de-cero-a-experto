@@ -1,18 +1,21 @@
-import { SaveOutlined } from "@mui/icons-material"
-import { Button, Grid2, TextField, Typography } from "@mui/material"
+import { SaveOutlined, UploadOutlined } from "@mui/icons-material"
+import { Button, Grid2, IconButton, TextField, Typography } from "@mui/material"
 import { ImageGallery } from "../components"
 import { useDispatch, useSelector } from "react-redux"
 import { useForm } from '../../hooks/useForm'; 
 import { useEffect, useMemo } from "react";
 import { setActiveNote } from "../../store/journal/journalSlice";
 import { startSaveNote } from "../../store/journal/thunks";
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.css';
+import { useRef } from "react";
 
 export const NoteView = () => {
 
     // Tomar la nota que este en esta Activo a la pantalla de edicion y cada campo con su respectivo input
     // Podemos tomar del estado del Store la nota que esta activa
     // al parametro "active" le cambiamos el nombre como "note" para saber que esta es la nota activa
-    const { active:note } = useSelector( state => state.journal ); 
+    const { active:note, messageSave, isSaving } = useSelector( state => state.journal ); 
     // Esta nota es el estado inicioal del CustomHook del formulario
     // Aqui en el "formState" esta toda la nota, los demas elementos los conectamos con los inputs respectivos
     /*
@@ -53,6 +56,25 @@ export const NoteView = () => {
         dispatch( startSaveNote() );
     }
 
+    // Mostrar mensaje de Alerta que se guardo la nota
+    useEffect(() => {
+        // Como va a estar cambiando entre un texto y un string vacio vamos a verificar
+        if( messageSave.length > 0){
+            Swal.fire('Nota actualizada', messageSave, 'success');
+        }
+    }, [messageSave]);
+
+    // Hacer la simulacion de un click y que al hacer click en el Icon se dispare el input
+    // que carga las imagenes
+    const fileInputRef = useRef();
+
+    const onFileInputChange = ({ target }) => {
+        // En target tenemos la cantidad de archivos seleccionados
+        if( target.files === 0 ) return;
+
+        dispatch( startUploadingFiles( target.files ) );
+    }
+
     return (
         // Box es como un Div y el Grid nos permite definir elementos internamente (Orden y alineamento)
         <Grid2 
@@ -66,8 +88,43 @@ export const NoteView = () => {
                 <Typography fontSize={ 39 } fontWeight="light">{ dateString }</Typography>
             </Grid2>
 
+            {/*
+                La idea es que el hosting de nuestras imagenes sea diferente al hosting en donde
+                tenemos nuestra aplicacion corriendo
+                Aqui vamos a usar cloudinary.con asi vamos a poder tener un boton para subir imagenes
+                tradicional y podamos seleccionar uno o varios archivo y ssean subidos de manera tradicional
+                Luego esas imagenes requeriran un backend que tengan un URL que este esperando esas imagenes 
+                y ahi es donde entra Cloudinary
+                
+                Vamos a implementar unos selectores de imagenes que tomaran la imagen y la van a mandar a cloudinary  
+                por defecto en los inputs de tipo File no podemos seleccionar multiples archivos
+                para esto tenemos que definirle la propiedad multiple
+
+                Aqui queremos que se muestre para subir los archivos el IconButton y no el input oroginal porque
+                se mira feo, como el Icon es solo la vista y la funcionalidad esta en el Input, entonces tenemos
+                que usar el UseRef para que cuando toquemos el Icon se dispare el Input
+                        (El input lo ocultamos con CSS y le especificamos la refernecia al input con el hook)
+            */}
+            <input
+                type="file"
+                multiple
+                ref={fileInputRef}
+                onChange={ onFileInputChange }
+                style={{display: 'none'}}
+            />
+
+            <IconButton
+                color="primary"
+                disabled={ isSaving }
+                // Simulamos cuando se hace click se ejecute este en el Input de arriba
+                onClick={ () => fileInputRef.current.click() }
+            >
+                <UploadOutlined/>
+            </IconButton>
+
             <Grid2 item="true">
                 <Button 
+                    disabled={isSaving}
                     onClick={ onSaveNote }
                     color="primary"
                     sx={{ padding: 2 }}
