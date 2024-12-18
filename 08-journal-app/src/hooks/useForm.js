@@ -17,6 +17,12 @@ export const useForm = ( initialForm = {}, formValidations = {} ) => {
         createValidators();
     }, [ formState ]);
 
+    // Para que se actualize con los nuevos valores cada vez que el "initialForm" cambie
+    useEffect(() => {
+        // LE establecemos el nuevo initialForm
+        setFormState( initialForm );
+    }, [initialForm]);
+
     // Con esta propiedad verificamos si todos los valores son validos 
     // Esta la memorizamos por si se cambia en otras cosas no afecta a todo en general que solo debe de cambiar
     // si cambia el formValidation

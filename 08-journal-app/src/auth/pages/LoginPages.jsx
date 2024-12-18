@@ -12,6 +12,13 @@ import { useMemo } from 'react';
     El diseno de este y el del Registro es LITERALMENTE el mismo, lo unico que cambia
     es un formulario entonces podemos reutilizar todo esto
 */
+
+const formData = {
+    // Solo le especificamos informacion de relleno
+    email: '',
+    password: ''
+}
+
 export const LoginPages = () => {
 
     // Debemos de tener cuidad que al estar abierta la ventana del PopUp de Google el usuario no deba de poder volver a 
@@ -23,11 +30,10 @@ export const LoginPages = () => {
     const dispatch = useDispatch(); // Lo usamos para las tareas asyncronas
 
     // Con el uso del CustomHook le especificamos como queremos que lusca el formulario
-    const { email, password, onInputChange } = useForm({
-        // Solo le especificamos informacion de relleno
-        email: '',
-        password: ''
-    });
+    // En un inicio teniamos un Error porque dispara el useForm un renderizador a cada rato porque cuando se dispara la primera vez
+    // como mandamos este objeto se dispara el UseEffect que le implementamos que cambia el InitialForm, asi que sacamos este objeto
+    // porque sino es una posicion de memoria diferente
+    const { email, password, onInputChange } = useForm(formData);
 
     // Vamos a memorizar el resultado que obtenemos el "status", le ponemos como dependencia el Status
     // para que cada vez que cambie se vuelva a recalcular el valor
