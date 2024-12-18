@@ -115,3 +115,11 @@ export const startSaveNote = () => {
 
     }
 }
+
+export const startUploadingFiles = ( files = [] ) => {
+    return async (dispatch) => {
+        // Ponemos la aplicacion en estado de carga, asi ademas bloqueamos los botones
+        dispatch( setSaving() );
+        // Para no implementar toda la logica aqui en la carga de archivos mejor nos creamos un helper
+    }
+}

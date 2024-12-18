@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useForm } from '../../hooks/useForm'; 
 import { useEffect, useMemo } from "react";
 import { setActiveNote } from "../../store/journal/journalSlice";
-import { startSaveNote } from "../../store/journal/thunks";
+import { startSaveNote, startUploadingFiles } from "../../store/journal/thunks";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.css';
 import { useRef } from "react";
@@ -72,6 +72,8 @@ export const NoteView = () => {
         // En target tenemos la cantidad de archivos seleccionados
         if( target.files === 0 ) return;
 
+        // Subir las imagenes a Cloudinary
+        //  Como tenemos que llegar a un endpoint, hacer la peticion HTTP es una tarea asyncrona por lo tanto usamos Thonk
         dispatch( startUploadingFiles( target.files ) );
     }
 
