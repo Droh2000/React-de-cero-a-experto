@@ -3,7 +3,7 @@
 
 import { doc, collection, setDoc } from "firebase/firestore";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes } from "./journalSlice";
+import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setSaving, updateNote } from "./journalSlice";
 import { loadNotes } from "../../helpers/loadNotes";
 
 // Este boton esta en: /src/journal/pages/JournalPages.jsx
@@ -80,5 +80,38 @@ export const startLoadingNotes = ( ) => {
         // de forma local, esto lo tenemos que definir en el "journalSlice.js" para tener el 
         // store las notas (LLamamos desde el thonks para asegurarnos que tengamos las notas)
         dispatch( setNotes( notes ) );
+    }
+}
+
+// Para guardar una nota escrita en form a Firebase
+export const startSaveNote = () => {
+    return async (dispatch, getState) => {
+        // En este procedimiento debemos de establecer que esta el estado de "isSaving" en True
+        dispatch(setSaving());
+        // Tomamos los elementos que requerimos porque vamos a construir la direccion de la nota que vamos a actualizar
+        const {uid} = getState().auth;
+        // La nota ya por defecto viene con el campo ID pero si lo guardamos asi Firebase nos va a crear otro ID
+        // asi que tenemos que eliminarle ese campo
+        const { active:note } = getState().journal;
+        // Mandamos la nota a fireStore
+        const noteToFireStore = {...note}
+        // Esta es una forma de eliminar una propiedad de un objeto
+        delete noteToFireStore.id;
+        // Hacemos la referencia al documento que queremos actualizar
+        // Le pasamos la referencia a la BaseDedatos y la Direccion donde vamos a guardar
+        const docRef = doc( FirebaseDB, `${uid}/journal/notes/${note.id}` );
+        // Actualizamos la base de datos en FireBase
+        // Aqui le especificamos en el tercer agumento las opciones donde usamos el merge donde le decimos que si hay
+        // campos que estamos mandando que no existen en la BD entonces se mantienen los campos
+        await setDoc( docRef, noteToFireStore, { merge:true } );
+
+        // Cuando se termina este procedimiento quiere decir que la nota fue actualizada
+        // Estamos en la interface actualizamos los datos y le damos a Guardar, veremos que en Firestore si cambio
+        // pero en la interface los datos viejos se mantuvieron, esto es porque impactamos unicamente la nota activa
+        // en ningun momento le estamos diciendo al JournalSlice que una nota se actualizo, para solucinarlo
+        // es que en el JournalSlice usamos el reducer "updateNote" y le mandamos la nota que queremos actualizar
+        // en este caso si nos interesa que tenga el ID 
+        dispatch( updateNote(note) );
+
     }
 }

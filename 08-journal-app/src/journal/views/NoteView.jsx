@@ -1,9 +1,11 @@
 import { SaveOutlined } from "@mui/icons-material"
 import { Button, Grid2, TextField, Typography } from "@mui/material"
 import { ImageGallery } from "../components"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useForm } from '../../hooks/useForm'; 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { setActiveNote } from "../../store/journal/journalSlice";
+import { startSaveNote } from "../../store/journal/thunks";
 
 export const NoteView = () => {
 
@@ -33,7 +35,24 @@ export const NoteView = () => {
         const newDate = new Date( date );
         return newDate.toUTCString();
     }, [date]);
+
     
+    // Aplicar los cambios de la notas del Formulario a la Base de datos 
+    // pero tambien vamos a hacer que cada vez que ocurra un cambio los vamos a meter
+    // en la nota Activa 
+    // Cuando cualquier propiedad del FormState cambia entonces vamos a hacer el dispath de una nueva accion
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        // El setActiveNote va a activar la nota que le pasemos, si le pasamos el FormState va a tener las propeidades actualizadas
+        dispatch( setActiveNote(formState) );
+        // Con esto si quremos guardar solo hay que guardar lo que esta en la nota Activa que ya tiene todos los campos de la nota
+    }, [formState]);
+
+    const onSaveNote = () => {
+        // Para esta accion requerimos un thonk porque tenemos que conectarnos a Firebase
+        dispatch( startSaveNote() );
+    }
+
     return (
         // Box es como un Div y el Grid nos permite definir elementos internamente (Orden y alineamento)
         <Grid2 
@@ -48,7 +67,11 @@ export const NoteView = () => {
             </Grid2>
 
             <Grid2 item="true">
-                <Button color="primary" sx={{ padding: 2 }}>
+                <Button 
+                    onClick={ onSaveNote }
+                    color="primary"
+                    sx={{ padding: 2 }}
+                >
                     <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
                     Guardar
                 </Button>

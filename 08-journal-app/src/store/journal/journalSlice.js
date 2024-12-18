@@ -42,11 +42,23 @@ export const journalSlice = createSlice({
     },
     // Para cuando se esten guardando las notas
     setSaving: (state) => {// No requerimos el action porque aqui solo lo vamos a establecer en Truth
-
+      state.isSaving = true;
     },
     // Actualizar una nota
     updateNote: (state, action) => {
-
+      // Actualizamos la referencia local
+      state.isSaving = false; //terminamos de guardar
+      //Tenemos que recorrer el listado de entradas buscar la que le corresponde nuestro ID y actualizar ese valor
+      // Vamos a actualizar todo lo que mandamos en el action.payload
+      // Este codigo lo podemos implementar asi porque estamos usando el Reduce Toolkit
+      state.notes = state.notes.map( note => {
+        // Va a regresar una nota diferente si se cumple esta condicion
+        // suponemos que el payload va a ser la nota actualizada
+        if(note.id === action.payload.id){
+          return action.payload;
+        }
+        return note;
+      })
     },
     // Elminar la nota del listado
     deleteNoteById: (state, action) => {
