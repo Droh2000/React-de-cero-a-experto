@@ -6,6 +6,7 @@ import { addHours } from 'date-fns';
 
 import { NavBar, CalendarEvent } from "../";
 import { localizer, getMessagesES } from '../../helpers';
+import { useState } from 'react';
 
 const events = [{
     title: 'Cumple del Jefe',
@@ -21,6 +22,11 @@ const events = [{
 }];
 
 export const CalendarPages = () => {
+
+    // Para almacenar en el localStorage la ubicacion donde nos encontramos en la app
+    // En estado inicial obtenemos el elemento pero este puede ser null cuando se carga la primera vez asi
+    // que dejamos la vista en la semana 
+    const [ lastView, setLastView ] = useState(localStorage.getItem('lastview') || 'week');
 
     // Tenemos el evento, la fecha de inicio, la de finalizacion y una propiedad booleana
     const eventStyleGetter = ( event, start, end, isSelected ) => {
@@ -38,6 +44,25 @@ export const CalendarPages = () => {
         }
     }
 
+    // Evento cuando hacemos click queremos saber a cuadro del calendario le hicimos click
+    const onSelect = ( event ) => {
+
+    }
+
+    // Queremos hacer Dobleclick en el cuadro para sacar informacion extra de esta nota
+    const onDoubleClick = ( event ) => {
+
+    }
+
+    // A pesar qee se recarge el navegador queremos que se mantenga en la misma pantalla de la opcion del menu
+    const onViewChanged = ( event ) => {
+        // Vamos a almacenar en el LocalStorage la ubicacion donde se encuentra en la app
+        // y de ahi vamos a establecer la ubicacion con una propiedad del componente
+        localStorage.setItem('lastView', event);
+        // Esto no es necesario hacerlo porque el calendario ya cambia cuando establecemos la propiedad en el Calendario
+        setLastView( event );
+    }
+
     return (
         <>
             <NavBar/>
@@ -46,6 +71,7 @@ export const CalendarPages = () => {
             culture='es'
               localizer={localizer}
               events={events}
+              defaultView={ lastView } // Para establecer la vista que se almacena en el localstorage
               startAccessor="start"
               endAccessor="end"
               style={{ height: 'calc( 100vh - 80px )' }}// Le decimos que nos calcule basado en el 100% y le reste 80px
@@ -58,6 +84,10 @@ export const CalendarPages = () => {
                 // Asi obtenemos varias Propiedades que podemos manipular (Estas las desestructuramos dentro del componente)
                 event: CalendarEvent
               }}
+              // Conectamos los otros eventos
+              onDoubleClickEvent={onDoubleClick }
+              onSelectEvent={ onSelect }
+              onView={ onViewChanged }
             />
 
         </>
