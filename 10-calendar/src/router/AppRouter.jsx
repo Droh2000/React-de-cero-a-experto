@@ -7,7 +7,7 @@ export const AppRouter = () => {
 
     // Esta es la validacion (Dependiendo de esta vamos a mostrar una u otra ruta)
     // asi nos evitamos el paso de crear rutas privadas o publicas
-    const authStatus = 'not-authenticated';
+    const authStatus = 'authenticated'; // not-
 
     return (
         <Routes>
@@ -20,15 +20,15 @@ export const AppRouter = () => {
                 : <Route path='/*' element={ <CalendarPages/> }/>  // Cualquier otra ruta que no sea la de arriba entonces entra al elemento que es el calendario
 
             }
-                {/*
-                    Si se pone una ruta que no es conocida
-                    ESto se va a llegar a esta ruta
-                    Porque si no estubieramos autenticado solo apuntamos al /auth/
-                    entonces en este caso redireccionamos a esa ruta, ya si estamos autneticado se maneja
-                    la otra ruta de /*, la ruta de abajo con Navigate la ponemos como a prueba de fallos para evitar
-                    que el usuario entre a un lugar donde no queramos
-                */}
-                <Route path='/*' element={ <Navigate to="/auth/login" /> }/>
+            {/*
+                Si se pone una ruta que no es conocida
+                ESto se va a llegar a esta ruta
+                Porque si no estubieramos autenticado solo apuntamos al /auth/
+                entonces en este caso redireccionamos a esa ruta, ya si estamos autneticado se maneja
+                la otra ruta de /*, la ruta de abajo con Navigate la ponemos como a prueba de fallos para evitar
+                que el usuario entre a un lugar donde no queramos
+            */}
+            <Route path='/*' element={ <Navigate to="/auth/login" /> }/>
         </Routes>
         // Ya si quisieramos podriamos implementar rutas pribadas o publicas pero en este caso es una implementacion de otra forma
     )
