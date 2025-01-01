@@ -1,27 +1,11 @@
 // Para la implementacion del calendario instalamos una libreria que se puede ver en la importacion
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
+import { Calendar } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-// Tambien instalamos esta libreria
-import format from 'date-fns/format'
-import parse from 'date-fns/parse'
-import startOfWeek from 'date-fns/startOfWeek'
-import getDay from 'date-fns/getDay'
-import enUS from 'date-fns/locale/en-US'
+
 import { addHours } from 'date-fns';
 
 import { NavBar } from "../";
-
-const locales = {
-    'en-US': enUS,
-}
-
-const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales,
-})
+import { localizer, getMessagesES } from '../../helpers';
 
 const events = [{
     title: 'Cumple del Jefe',
@@ -37,16 +21,25 @@ const events = [{
 }];
 
 export const CalendarPages = () => {
+
+    // Tenemos el evento, la fecha de inicio, la de finalizacion y una propiedad booleana
+    const eventStyleGetter = ( event, start, end, isSelected ) => {
+        // Dependiendo de lo que obtengamos aqui podemos cambiar el estilo
+    }
+
     return (
         <>
             <NavBar/>
 
             <Calendar
+            culture='es'
               localizer={localizer}
               events={events}
               startAccessor="start"
               endAccessor="end"
               style={{ height: 'calc( 100vh - 80px )' }}// Le decimos que nos calcule basado en el 100% y le reste 80px
+              messages={ getMessagesES() }
+              eventPropGetter={ eventStyleGetter }// Vamos a establecer un evento y veremos como funcionan en el calendario
             />
 
         </>
