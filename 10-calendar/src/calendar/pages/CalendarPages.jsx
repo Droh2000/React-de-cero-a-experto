@@ -4,7 +4,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { addHours } from 'date-fns';
 
-import { NavBar } from "../";
+import { NavBar, CalendarEvent } from "../";
 import { localizer, getMessagesES } from '../../helpers';
 
 const events = [{
@@ -25,6 +25,17 @@ export const CalendarPages = () => {
     // Tenemos el evento, la fecha de inicio, la de finalizacion y una propiedad booleana
     const eventStyleGetter = ( event, start, end, isSelected ) => {
         // Dependiendo de lo que obtengamos aqui podemos cambiar el estilo
+        // ya que estas propiedades que le msnadamos son las mismas que especificamos en "events"
+        const style = {
+            backgroundColor: '#347CF7',
+            borderRadius: '0px',
+            opacity: 0.8,
+            color: 'white'
+        }
+
+        return {
+            style
+        }
     }
 
     return (
@@ -40,6 +51,13 @@ export const CalendarPages = () => {
               style={{ height: 'calc( 100vh - 80px )' }}// Le decimos que nos calcule basado en el 100% y le reste 80px
               messages={ getMessagesES() }
               eventPropGetter={ eventStyleGetter }// Vamos a establecer un evento y veremos como funcionan en el calendario
+              components={{
+                // Creamos este componente para manejar el cuadro azul que se crea en el calendario al crear un nota
+                // Aqui le especificamos los compoentes que pueden utilizarse
+                // En este caso nos interesa sobrescribir un evento que seria el mismo para toda la App y solo le mandamos la referncia
+                // Asi obtenemos varias Propiedades que podemos manipular (Estas las desestructuramos dentro del componente)
+                event: CalendarEvent
+              }}
             />
 
         </>
