@@ -1,10 +1,12 @@
 // Para generar el Modal (La pantalla que se muestra al hacer doble clik en el cuadro) instalamos un paquete
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import { addHours, differenceInSeconds } from 'date-fns';
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from 'date-fns/locale/es';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 // Para ponerlo en el idioma en español
 registerLocale('es', es);
@@ -29,6 +31,10 @@ export const CalendarModal = () => {
     // Esto sera temporal porque el cerrar un model debe ser global donde tambien en otras partes de la app se pueda cerrar
     const [ isOpen, setIsOpen ] = useState(true);
 
+    // Para mostrar que el titulo tiene errores vamos a ocupar un estado adicional
+    // Lo ponemos como estado inicial de "False" osea que por defecto no se ah hecho el submit del formulario
+    const [ formSubmitted, setFormSubmitted ] = useState(false);
+
     // Veamos como funciona un formulario (Esto son para los campos del Modal)
     const [formValues, setFormValues] = useState({
         title: 'Jose',
@@ -36,6 +42,20 @@ export const CalendarModal = () => {
         start: new Date(),
         end: addHours( new Date(), 2 ),
     });
+
+    // Para el manejo de indicar si el titulo esta mal o bien debemos manejar las clases en el HTML que ya tienen para eso
+    // Para memorizar el valor solo cuando el titulo cambia o si se hizo un submitted al form
+    const titleClass = useMemo(() => {
+        // Si el formulario no se a disparado regresamos un String vacio que iria en el atributo class de HTML
+        if( !formSubmitted ) return '';
+
+        // Si ya se hizo el posteo del formulario y el titulo esta vacio en este caso mostramos el error
+        return ( formValues.title.length > 0 )
+               ? 'is-valid' // Podemos dejar solo comillas vacias para no mostrar el color verde ya que el modal se va cerrar
+               : 'is-invalid';
+
+    }, [ formValues.title, formSubmitted ]);
+
     
     // Para poder cambiar los inputs del formulario
     const onInputChanged = ({ target }) => {
@@ -64,6 +84,9 @@ export const CalendarModal = () => {
     const onSubmit = ( event ) => {
         event.preventDefault(); // Detenemos la propagacion por defecto del formulario
 
+        // Cambiamos al estado de que se intento hacer submitt del formulario
+        setFormSubmitted(true);
+
         // Configuramos para que la fecha inicial siempre sea menor a la fecha Final
         // Para obtenemos del paquete importado la diferencia en segundos donde la primera fecha
         // que le pasamos es la que esperamos que sea mas grande
@@ -71,6 +94,7 @@ export const CalendarModal = () => {
         // Asi si este valor nos da negativo significa que la fecha de inicio es mayor 
         // adems si dejamos un campo de las fechas sin nada nos regresa NaN asi que tambien tenemos que verificar eso
         if( isNaN( difference ) || difference <= 0 ){
+            Swal.fire('Fechas incorrectas', 'Revisar las fechas ingresadas', 'error');
             return;
         }
 
@@ -129,7 +153,10 @@ export const CalendarModal = () => {
                     <label>Titulo y notas</label>
                     <input 
                         type="text" 
-                        className="form-control"
+                        // Aqui le pusmios una clase de positivo o negativo "is-valid"
+                        // o si tiene un error esta la clase de is-invalid, estas son las clases con las que tenemos que jugar
+                        // Asi que le pasamos la variable que tiene el Hook del useMemo
+                        className={`form-control ${ titleClass }`}
                         placeholder="Título del evento"
                         name="title"
                         autoComplete="off"
