@@ -2,8 +2,12 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 import { addHours } from 'date-fns';
-import DatePicker from "react-datepicker";
+import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import es from 'date-fns/locale/es';
+
+// Para ponerlo en el idioma en español
+registerLocale('es', es);
 
 const customStyles = {
     content: {
@@ -79,6 +83,9 @@ export const CalendarModal = () => {
                         // event es el valor de la nueva fecha seleccionada
                         onChange={(event) => onDateChanged(event, 'start')}
                         dateFormat="Pp" // para que se muestren los minutos 
+                        showTimeSelect// Para que aparesca la parte de Hr/Min/Seg y podamos seleccionar eso
+                        locale='es' // Para implementarle el espanol
+                        timeCaption='Hora' // PAra que la parte de seleccion de la Hora salga en espanol
                     />
                 </div>
 
@@ -91,6 +98,9 @@ export const CalendarModal = () => {
                         className='form-control'
                         onChange={(event) => onDateChanged(event, 'end')}
                         dateFormat="Pp"
+                        showTimeSelect
+                        locale='es'
+                        timeCaption='Hora'
                     />
                 </div>
 
