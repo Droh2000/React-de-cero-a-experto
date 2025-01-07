@@ -1,7 +1,7 @@
 // Para generar el Modal (La pantalla que se muestra al hacer doble clik en el cuadro) instalamos un paquete
 import { useState } from 'react';
 import Modal from 'react-modal';
-import { addHours } from 'date-fns';
+import { addHours, differenceInSeconds } from 'date-fns';
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from 'date-fns/locale/es';
@@ -60,6 +60,26 @@ export const CalendarModal = () => {
         setIsOpen(false);
     }
 
+    // Obtener informacion del Formulario
+    const onSubmit = ( event ) => {
+        event.preventDefault(); // Detenemos la propagacion por defecto del formulario
+
+        // Configuramos para que la fecha inicial siempre sea menor a la fecha Final
+        // Para obtenemos del paquete importado la diferencia en segundos donde la primera fecha
+        // que le pasamos es la que esperamos que sea mas grande
+        const difference = differenceInSeconds( formValues.end, formValues.start );
+        // Asi si este valor nos da negativo significa que la fecha de inicio es mayor 
+        // adems si dejamos un campo de las fechas sin nada nos regresa NaN asi que tambien tenemos que verificar eso
+        if( isNaN( difference ) || difference <= 0 ){
+            return;
+        }
+
+        // Vamos a poner obligatorio que tengamos el titulo de la nota
+        if( formValues.title.length <= 0 ) return;
+         
+    } 
+
+
     return (
         <Modal
             isOpen = {isOpen} // Si queremos que este abierta la pantalla
@@ -73,7 +93,7 @@ export const CalendarModal = () => {
             {/* Para el contenido del model instalamos la libreria de React DatePicker */}
             <h1> Nuevo evento </h1>
             <hr />
-            <form className="container">
+            <form className="container" onSubmit={ onSubmit }>
 
                 <div className="form-group mb-2">
                     <label>Fecha y hora inicio</label>
