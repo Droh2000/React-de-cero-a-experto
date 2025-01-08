@@ -41,7 +41,7 @@ export const CalendarModal = () => {
     // Lo ponemos como estado inicial de "False" osea que por defecto no se ah hecho el submit del formulario
     const [ formSubmitted, setFormSubmitted ] = useState(false);
 
-    const { activeEvent } = useCalendarStore();
+    const { activeEvent, startSavingEvent } = useCalendarStore();
 
     // Veamos como funciona un formulario (Esto son para los campos del Modal)
     const [formValues, setFormValues] = useState({
@@ -105,7 +105,7 @@ export const CalendarModal = () => {
     }
 
     // Obtener informacion del Formulario
-    const onSubmit = ( event ) => {
+    const onSubmit = async ( event ) => {
         event.preventDefault(); // Detenemos la propagacion por defecto del formulario
 
         // Cambiamos al estado de que se intento hacer submitt del formulario
@@ -124,6 +124,15 @@ export const CalendarModal = () => {
 
         // Vamos a poner obligatorio que tengamos el titulo de la nota
         if( formValues.title.length <= 0 ) return;
+
+        // Guardamos la nota
+        await startSavingEvent( formValues );
+
+        // Cerramos el modal automaticamente
+        closeDateModal();
+
+        // Limpiamos el mensaje del formulario 
+        setFormSubmitted(false);
          
     }
 

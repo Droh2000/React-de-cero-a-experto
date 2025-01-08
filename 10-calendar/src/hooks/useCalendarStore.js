@@ -6,7 +6,7 @@
 // llaman las funciones que requieran
 
 import { useDispatch, useSelector } from "react-redux"
-import { onSetActiveEvent } from "../store";
+import { onAddNewEvent, onSetActiveEvent } from "../store";
 
 export const useCalendarStore = () => {
 
@@ -23,11 +23,32 @@ export const useCalendarStore = () => {
         dispatch( onSetActiveEvent(calendarEvent) );
     }
 
+    // Una tecnica que vamos a usar aqui es que no vamos a usar Thunks, en lugar de eso vamos a disparar siempre
+    // acciones siempre sincronas, no vamos a tener thonks asyncronos
+    // Aqui creamos algo que parece un Thunk (Empezamos a crear una nueva nota)
+    // Eventualmente vamos a llegar al backend mandarle la informacion respectiva (Que seria la nueva notta)
+    // vamos a ir al backen y este nos va a regresar la informacion
+    const startSavingEvent = async (calendarEvent) => {
+
+        // Si la nota que le pasamos tiene el ID
+        if( calendarEvent._id ){
+            // Actualizando
+
+        }else{
+            // Creando
+            // Insertamos en el arreglo de los eventos
+            // El "calendarEvent" seria la nueva nota pero como no tiene el ID por el momento le creamos uno ficticio
+            // esto sera temporal hasta que ya tengamos acceso al backend
+             dispatch( onAddNewEvent({ ...calendarEvent, _id: new Date().getTime() }) );
+        }
+    }
+
     return {
         // Propieades
         events,
         activeEvent,
         // Metodos
         setActiveEvent,
+        startSavingEvent, // Este lo llamamos en el CalendarModal porque es el que esta haciendo el inicio del guardado
     }
 }

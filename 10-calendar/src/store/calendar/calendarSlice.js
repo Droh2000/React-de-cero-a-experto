@@ -35,10 +35,19 @@ export const calendarSlice = createSlice({
     // lo importante es que mantengamos lo mas homogeneo posible
     onSetActiveEvent: ( state, { payload } ) => {
       state.activeEvent = payload; // Lo que sea que le mande se va a activar
+    },
+    // Para guardar una nueva nota desde el boton de Guardar
+    // El payload seria la nueva con el ID ya lista y procesada para ser insertada
+    onAddNewEvent: (state, { payload }) => {
+      state.events.push( payload );
+      // Una vez se inserta la nota hay que cerrar el modal y limpiamos los ccampos de de la nota
+      state.activeEvent = null;
+
     }
   },
 });
 
 export const {
-  onSetActiveEvent
+  onSetActiveEvent,
+  onAddNewEvent
 } = calendarSlice.actions;
