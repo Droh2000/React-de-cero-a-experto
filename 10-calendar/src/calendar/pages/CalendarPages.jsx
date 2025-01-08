@@ -7,6 +7,7 @@ import { addHours } from 'date-fns';
 import { NavBar, CalendarEvent, CalendarModal } from "../";
 import { localizer, getMessagesES } from '../../helpers';
 import { useState } from 'react';
+import { useUiStore } from '../../hooks';
 
 const events = [{
     title: 'Cumple del Jefe',
@@ -22,6 +23,9 @@ const events = [{
 }];
 
 export const CalendarPages = () => {
+
+    // Custom Hook para poder abrir el modal
+    const { openDateModal } = useUiStore();
 
     // Para almacenar en el localStorage la ubicacion donde nos encontramos en la app
     // En estado inicial obtenemos el elemento pero este puede ser null cuando se carga la primera vez asi
@@ -46,12 +50,13 @@ export const CalendarPages = () => {
 
     // Evento cuando hacemos click queremos saber a cuadro del calendario le hicimos click
     const onSelect = ( event ) => {
-
+        console.log('On Select');
     }
 
     // Queremos hacer Dobleclick en el cuadro para sacar informacion extra de esta nota
     const onDoubleClick = ( event ) => {
-
+        console.log('Doble click');
+        openDateModal(); // Abrimos el modal
     }
 
     // A pesar qee se recarge el navegador queremos que se mantenga en la misma pantalla de la opcion del menu
@@ -68,7 +73,7 @@ export const CalendarPages = () => {
             <NavBar/>
 
             <Calendar
-            culture='es'
+              culture='es'
               localizer={localizer}
               events={events}
               defaultView={ lastView } // Para establecer la vista que se almacena en el localstorage
@@ -90,7 +95,7 @@ export const CalendarPages = () => {
               onView={ onViewChanged }
             />
 
-            <CalendarModal/>
+            <CalendarModal />
 
         </>
     )

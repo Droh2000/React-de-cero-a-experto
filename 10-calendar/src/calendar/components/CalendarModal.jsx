@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import es from 'date-fns/locale/es';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import { useUiStore } from '../../hooks';
 
 // Para ponerlo en el idioma en español
 registerLocale('es', es);
@@ -26,10 +27,14 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
+
+    // Custom Hook para saber si el modal esta abierto o cerrado, de aqui sacamos la propiedad que nos interesa
+    // El valor de "isDateModalOpen" va a estar determinado basado en el Store
+    const { isDateModalOpen, closeDateModal } = useUiStore();
     
     // Este lo usamos para cambiar el valor de la propiedad del "isOpen" y asi cerrar el modal
     // Esto sera temporal porque el cerrar un model debe ser global donde tambien en otras partes de la app se pueda cerrar
-    const [ isOpen, setIsOpen ] = useState(true);
+    //const [ isOpen, setIsOpen ] = useState(true); -> Se comento porque ya no se nesecita al tener el CustomHook de arriba
 
     // Para mostrar que el titulo tiene errores vamos a ocupar un estado adicional
     // Lo ponemos como estado inicial de "False" osea que por defecto no se ah hecho el submit del formulario
@@ -77,7 +82,8 @@ export const CalendarModal = () => {
     }
 
     const onCloseModal = () => {
-        setIsOpen(false);
+        //setIsOpen(false);
+        closeDateModal();
     }
 
     // Obtener informacion del Formulario
@@ -101,12 +107,11 @@ export const CalendarModal = () => {
         // Vamos a poner obligatorio que tengamos el titulo de la nota
         if( formValues.title.length <= 0 ) return;
          
-    } 
-
+    }
 
     return (
         <Modal
-            isOpen = {isOpen} // Si queremos que este abierta la pantalla
+            isOpen = {isDateModalOpen} // Si queremos que este abierta la pantalla
             onRequestClose={ onCloseModal } // Esta funcion que se va a disparar cuando se mande a llamar la forma de cerrar el modal como al hacer click afuera
             style={customStyles}
             // Estos son estilos definidos en el index.css
