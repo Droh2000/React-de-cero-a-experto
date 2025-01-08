@@ -7,7 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import es from 'date-fns/locale/es';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import { useUiStore } from '../../hooks';
+import { useCalendarStore, useUiStore } from '../../hooks';
+import { useEffect } from 'react';
 
 // Para ponerlo en el idioma en español
 registerLocale('es', es);
@@ -40,10 +41,14 @@ export const CalendarModal = () => {
     // Lo ponemos como estado inicial de "False" osea que por defecto no se ah hecho el submit del formulario
     const [ formSubmitted, setFormSubmitted ] = useState(false);
 
+    const { activeEvent } = useCalendarStore();
+
     // Veamos como funciona un formulario (Esto son para los campos del Modal)
     const [formValues, setFormValues] = useState({
-        title: 'Jose',
-        notes: 'Lopez',
+        // Aqui cuando se cambie la nota activa, en ese momento cambiamos los valores del formulario
+        // De hecho en los datos que vienen donde dice la nota activa viene mas informacion, para aplicar los cambios hacemos un useEffect
+        title: '',
+        notes: '',
         start: new Date(),
         end: addHours( new Date(), 2 ),
     });
@@ -60,6 +65,19 @@ export const CalendarModal = () => {
                : 'is-invalid';
 
     }, [ formValues.title, formSubmitted ]);
+
+    // Asi le pasamos los datos que definimos en el CalendarSlice y no los que definimos aqui en el useState a los campos del modal
+    useEffect(() => {
+        // Hay un punto donde "activeEvent" vale NULL y no le debemos establecer estos valores al formulario porque 
+        // muchos campos perderian el enlace (Asi que solo ejecutamos este codigo si no es nulo)
+        if( activeEvent != null ){
+            // Aqui usamos el operador Spread porque queremos crear una nueva instancia de ese objeto
+            setFormValues({ ...activeEvent });
+        }
+
+    // Como dependencia le mandamos la propiedad que creamos en el 'calendarSlise.js' donde se indica la nota activa
+    // Este efecto se dispara cada vez que la nota cambie
+    },[ activeEvent ]);
 
     
     // Para poder cambiar los inputs del formulario

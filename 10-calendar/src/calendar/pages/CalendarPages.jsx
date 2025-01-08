@@ -27,7 +27,7 @@ import { useUiStore, useCalendarStore } from '../../hooks';
 export const CalendarPages = () => {
 
     // Asi tomamos los datos de la funcion comentada de arriba pero ahora del Custom Hook
-    const {events} = useCalendarStore();
+    const {events, setActiveEvent} = useCalendarStore();
 
     // Custom Hook para poder abrir el modal
     const { openDateModal } = useUiStore();
@@ -55,12 +55,13 @@ export const CalendarPages = () => {
 
     // Evento cuando hacemos click queremos saber a cuadro del calendario le hicimos click
     const onSelect = ( event ) => {
-        console.log('On Select');
+        // Del customHook indicamos que esa nota esta activada
+        // Asi desde el momento en el que hacemos doble click ya esta la nota activa
+        setActiveEvent( event );
     }
 
     // Queremos hacer Dobleclick en el cuadro para sacar informacion extra de esta nota
     const onDoubleClick = ( event ) => {
-        console.log('Doble click');
         openDateModal(); // Abrimos el modal
     }
 

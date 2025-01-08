@@ -5,9 +5,12 @@
 // Lo vamos a hacer atraez de este custom hook (Asi tenemos centralizada la logica) y los demas componentes solo
 // llaman las funciones que requieran
 
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { onSetActiveEvent } from "../store";
 
 export const useCalendarStore = () => {
+
+    const dispatch = useDispatch(); // PAra conectarnos a los reducers
 
     // Vamos a tomar los datos que estan el CalendarSlice y asi mostrarlos en el CalendarPages
     // (Estamos accediendo al store "calendarSlice.js")
@@ -15,12 +18,16 @@ export const useCalendarStore = () => {
 
     // Asi es como cuando queremos crear mas interacciones del calendario, nos creamos funciones aqui internas
     // que nos sirven para hacer los dispatch de las acciones respectivas
-    
+    // A esta funcion le mandamos el payload que esta esperando (La accion)
+    const setActiveEvent = ( calendarEvent ) => {
+        dispatch( onSetActiveEvent(calendarEvent) );
+    }
 
     return {
         // Propieades
         events,
         activeEvent,
         // Metodos
+        setActiveEvent,
     }
 }
