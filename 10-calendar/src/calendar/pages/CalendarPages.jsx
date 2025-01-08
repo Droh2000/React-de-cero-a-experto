@@ -7,9 +7,9 @@ import { addHours } from 'date-fns';
 import { NavBar, CalendarEvent, CalendarModal } from "../";
 import { localizer, getMessagesES } from '../../helpers';
 import { useState } from 'react';
-import { useUiStore } from '../../hooks';
+import { useUiStore, useCalendarStore } from '../../hooks';
 
-const events = [{
+/*const events = [{
     title: 'Cumple del Jefe',
     notes: 'Hay que mandarlo a chingar su madre',
     start: new Date(),// Este es el momento en el que queremos que empieze el evento
@@ -20,9 +20,14 @@ const events = [{
         _id: '123',
         name: 'jose'
     } 
-}];
+}];*/
+// Estos eventos de arriba ya no deberian de venir de aqui porque ahora deberian de venir del Store (Cualquier cosa nueva o actualizacion deberia de venir del Store)
+// ESto lo implementamos temporal en el "calendarSlice.js"
 
 export const CalendarPages = () => {
+
+    // Asi tomamos los datos de la funcion comentada de arriba pero ahora del Custom Hook
+    const {events} = useCalendarStore();
 
     // Custom Hook para poder abrir el modal
     const { openDateModal } = useUiStore();

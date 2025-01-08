@@ -1,6 +1,6 @@
 // Aqui vamos a configurar el Store
 import { configureStore } from '@reduxjs/toolkit';
-import { uiSlice } from './';
+import { uiSlice, calendarSlice } from './';
 
 
 // Debemos de colocar este Store en el punto mas alto de la APP o donde lo podamos empezar a consumir
@@ -8,6 +8,7 @@ import { uiSlice } from './';
 export const store = configureStore({
     reducer: {
         // Despues de implementado el reducer se lo mandamos
-        ui: uiSlice.reducer
+        ui: uiSlice.reducer,
+        calendar: calendarSlice.reducer
     }
 });
