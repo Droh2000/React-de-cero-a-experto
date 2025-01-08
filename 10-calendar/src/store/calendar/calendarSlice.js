@@ -43,11 +43,26 @@ export const calendarSlice = createSlice({
       // Una vez se inserta la nota hay que cerrar el modal y limpiamos los ccampos de de la nota
       state.activeEvent = null;
 
-    }
+    },
+    // Para actualizar una nota ya creada
+    onUpdateEvent: (state, { payload }) => {
+      // Esto significa que ya viene con un ID entonces buscamos la nota a actualizar
+      // Con el MAP que nos crea un nuevo arreglo de las notas que tengamos en el arreglo events
+      state.events = state.events.map( event => {
+        // Si el ID que estamos iternado es igual a lo que se esta mandando en el payload
+        if( event._id === payload._id ){
+          return payload; // Este sera el nuevo Event con los nuevos datos
+        }
+
+        return event;
+      });
+
+    },
   },
 });
 
 export const {
   onSetActiveEvent,
-  onAddNewEvent
+  onAddNewEvent,
+  onUpdateEvent
 } = calendarSlice.actions;

@@ -6,7 +6,7 @@
 // llaman las funciones que requieran
 
 import { useDispatch, useSelector } from "react-redux"
-import { onAddNewEvent, onSetActiveEvent } from "../store";
+import { onAddNewEvent, onSetActiveEvent, onUpdateEvent } from "../store";
 
 export const useCalendarStore = () => {
 
@@ -33,7 +33,7 @@ export const useCalendarStore = () => {
         // Si la nota que le pasamos tiene el ID
         if( calendarEvent._id ){
             // Actualizando
-
+            dispatch( onUpdateEvent({...calendarEvent}) );
         }else{
             // Creando
             // Insertamos en el arreglo de los eventos
