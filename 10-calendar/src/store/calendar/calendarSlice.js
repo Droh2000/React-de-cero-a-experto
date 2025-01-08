@@ -58,11 +58,23 @@ export const calendarSlice = createSlice({
       });
 
     },
+    // Accion para Eliminar una nota
+    // No requerimos pasarle el Payload porque solo con saber cual es la nota activa sabemos cual eliminar
+    onDeleteEvent:  (state) => {
+      // Vamos a regresar todos los eventos cuyo id sea diferente al de la nota activa
+      // Aqui fisicamente lo vamos a eliminar del arreglo
+      // Si no tenemos niguna nota activa no deberiamos de poder ejecutar este codigo
+      if( state.activeEvent ){
+        state.events = state.events.filter( event => event._id !== state.activeEvent._id );
+        state.activeEvent = null; // Para que ya no tengamos niguna nota activa
+      }
+    }
   },
 });
 
 export const {
   onSetActiveEvent,
   onAddNewEvent,
-  onUpdateEvent
+  onUpdateEvent,
+  onDeleteEvent
 } = calendarSlice.actions;

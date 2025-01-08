@@ -6,7 +6,7 @@
 // llaman las funciones que requieran
 
 import { useDispatch, useSelector } from "react-redux"
-import { onAddNewEvent, onSetActiveEvent, onUpdateEvent } from "../store";
+import { onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent } from "../store";
 
 export const useCalendarStore = () => {
 
@@ -43,12 +43,26 @@ export const useCalendarStore = () => {
         }
     }
 
+    // Para eliminar una nota activa (Se llama "start" porque vamos a empezar la eliminacion)
+    // LA eliminacion se tendra que conectar al backend y este nos regresa una respuecta, osea sera una tarea asyncrona
+    const startDeleteEvent = () => {
+        dispatch( onDeleteEvent() );
+    }
+
     return {
         // Propieades
         events,
         activeEvent,
+        // De manera condicional debemos de mostrar u ocultar el boton de elimnar
+        // para que solo se muestre si tenemos un nota activa (Seleccionada), esto lo sabemos con la propiedad
+        // de activeEvent, vamos a regresar una nueva propiedad
+        // Si es NULL regresa falso y si tiene un objeto nos regresa TRUE
+        hasEventSelected: !!activeEvent,
+
+
         // Metodos
         setActiveEvent,
         startSavingEvent, // Este lo llamamos en el CalendarModal porque es el que esta haciendo el inicio del guardado
+        startDeleteEvent, // Este lo implementamos en el "FabDelete.jsx"
     }
 }
