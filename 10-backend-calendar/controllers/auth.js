@@ -4,7 +4,7 @@
 // Podemos desestructurar de arriba 
 const { response } = require('express');
 
-// Para obtener los errores de Express-validator
+// Para obtener los errores de Express-validator (EStos se fueron al Custom middleware)
 const { validationResult } = require('express-validator');
 
 //const crearUsuario = (req, res = express.response) => {
@@ -32,17 +32,6 @@ const crearUsuario = (req, res = response) => {
         //});
     //}
 
-    // Manejo de errores (Si no hay vendra como un arreglo vacio)
-    const errors = validationResult( req ); // Obtenemos los errores
-    if( !errors.isEmpty() ){
-        // Esto es algo personalizado que vamos a hacer para que sea mas facil de trabajar
-        // Asi tenemos todos los errores serializados en un solo objeto
-        return res.status(400).json({
-            ok: false,
-            errors: errors.mapped()
-        });
-    }
-
     res.status(201).json({
         ok: true,
         msg: 'registro',
@@ -54,15 +43,6 @@ const crearUsuario = (req, res = response) => {
 const loginUsuario = (req, res = response) => {
 
     const { email, password } = req.body;
-
-    const errors = validationResult( req );
-    
-    if( !errors.isEmpty() ){
-        return res.status(400).json({
-            ok: false,
-            errors: errors.mapped()
-        });
-    }
 
     res.status(201).json({
         ok: true,

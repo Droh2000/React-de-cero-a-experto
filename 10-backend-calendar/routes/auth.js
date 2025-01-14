@@ -16,6 +16,7 @@ const { crearUsuario, loginUsuario, revalidarToken } = require('../controllers/a
 
 // El check es el middleware que se va a encargar de validar un campo en particular
 const { check } = require('express-validator');
+const { validarCampos } = require('../middlewares/validar-campos');
 
 // Crear un usuario 
 // Nos creamos un espacio reservado en la API ''/new 
@@ -29,14 +30,18 @@ router.post(
         check('name', 'El nombre es obligatorio').not().isEmpty(),
         // Ponemos las demas validaciones para los otors campos
         check('email', 'El email es obligatorio').isEmail(),
-        check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 })
+        check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 }),
+        // Implementamos el Custom Middleware
+        // En cualquier ruta donde tengamos un check al final lo llamamos
+        validarCampos
     ],
     crearUsuario);
 
 router.post(
     '/', [
         check('email', 'El email es obligatorio').isEmail(),
-        check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 })
+        check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 }),
+        validarCampos
     ],
     loginUsuario);
 
