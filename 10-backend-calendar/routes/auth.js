@@ -14,12 +14,31 @@ const router = Router();
 // De aqui extraemos la funcion
 const { crearUsuario, loginUsuario, revalidarToken } = require('../controllers/auth');
 
+// El check es el middleware que se va a encargar de validar un campo en particular
+const { check } = require('express-validator');
 
 // Crear un usuario 
 // Nos creamos un espacio reservado en la API ''/new 
-router.post('/new', crearUsuario);
+// Express Validator nos da middleware y asi podemoas hacer las validacion sin hacerlas manualmente
+// Como requereimos que los datos vengan en la peticion, es los pondemos mandar directamente como una funcion
+// como segundo argumento pero como queremos implementar varios middleware entre llavez para tener una coleccion de middlewares
+router.post(
+    '/new',[
+        // A la funcion le pasamos el campo que queremo evaluar, el mensaje de error y al final especificamos que no este vacio
+        // Para ver estos errores lo configuramos en el Controller
+        check('name', 'El nombre es obligatorio').not().isEmpty(),
+        // Ponemos las demas validaciones para los otors campos
+        check('email', 'El email es obligatorio').isEmail(),
+        check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 })
+    ],
+    crearUsuario);
 
-router.post('/', loginUsuario);
+router.post(
+    '/', [
+        check('email', 'El email es obligatorio').isEmail(),
+        check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 })
+    ],
+    loginUsuario);
 
 // Este es para renovar el token
 router.get('/renew', revalidarToken);
