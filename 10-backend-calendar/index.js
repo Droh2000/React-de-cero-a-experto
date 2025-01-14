@@ -32,6 +32,12 @@ const app = express();
 // En este caso establecemos el directorio publico que es lo que se mostrara
 app.use( express.static('public') );
 
+// Rutas
+// Una vez definida en nuestra carpeta Routes, le pasamos la ruta donde esta definido el endpoint
+
+// Todo lo relacionado a la autenticacion va a estar en esta ruta
+// En el 'requiere('Ruta de Archivo')' le decimos que todo lo que ese archivo vaya a exportar lo va a habilitar en la ruta especificada
+app.use('/api/auth', require('./routes/auth'));
 
 // Escuchar peticiones
 // El primer argumento es el puerto en donde correra y el segundo argumento es la funcion que se ejecuta
