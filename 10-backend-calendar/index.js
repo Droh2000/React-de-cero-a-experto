@@ -33,7 +33,12 @@ const app = express();
 app.use( express.static('public') );
 
 // Rutas
+
+// Lectura y Parceo del Body
 // Una vez definida en nuestra carpeta Routes, le pasamos la ruta donde esta definido el endpoint
+// Para mandar informacion en el Body para los endpoints de POST Vamos a prosesar la peticion del body
+// Para esto pasamos todas las peticiones que vengan en formato JSON por un middleware
+app.use( express.json() );
 
 // Todo lo relacionado a la autenticacion va a estar en esta ruta
 // En el 'requiere('Ruta de Archivo')' le decimos que todo lo que ese archivo vaya a exportar lo va a habilitar en la ruta especificada
