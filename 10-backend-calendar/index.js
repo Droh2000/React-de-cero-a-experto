@@ -3,6 +3,7 @@
 
 // Asi funciona en Node las importaciones
 const express = require('express');
+const { dbConnection } = require('./database/config');
 
 // Para que use las variables de Entorno
 require('dotenv').config();
@@ -26,6 +27,9 @@ const app = express();
     });
 
 });*/
+
+// Base de Datos
+dbConnection();
 
 // Directorio Publico
 // El "use()" en express es conocido como Middleware (Funcion que se ejecuta cuando se hace una peticion al servidor)
