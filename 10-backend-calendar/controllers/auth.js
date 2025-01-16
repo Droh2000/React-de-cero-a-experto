@@ -17,6 +17,7 @@ const crearUsuario = async (req, res = response) => {
 
     // Asi extraemos la informacion
     //const { name, email, password } = req.body;
+    const { email, password } = req.body;
     
     // Estos datos que tenemos (name, email, pasword) son datos obligatorios que deberiamos
     // de tener validado en el backend, en el Frontend por supuesto que los vamos a validar 
@@ -37,19 +38,31 @@ const crearUsuario = async (req, res = response) => {
 
     // Siempre que menjemos BD hay que usar Try/catch
     try {
+        // Hay que hacer varias validaciones que son requeridas antes de guardar el usuario en la BD
+        // aunque mongo nos valida, no hay que dejarle todo el trabajo a mongo
+        // Otra cosa a saber es que cuando creamos el modelo "Usuario" por defecto la coneccion la nombre como su plural "Usuarios"
+        // Con el modelo de usuario ya tenemos funciones para hacer busquedas en la BD
+        let usuario = await Usuario.findOne({ email });
+
+        // La variable de arriba si nos retorna un NULL quiere decir que no existe ese correo registrado
+        // pero si retorna un objeto siginifica que tenemos ya ese correo registrado
+        if( usuario ){
+            return res.status(400).json({
+                ok: false,
+                msg: 'Un usuario existe con ese correo'
+            });
+        }
+
         // Al Schema le masnamos la informacion que viene el body, ya mongoose sabe la estructura y valores que tiene
-        const usuario = new Usuario( req.body );
+        usuario = new Usuario( req.body );
 
         // Para guardarlo en la Base de datos (Como es una promesa usamos async/await)
         await usuario.save();
 
-        // Hay que hacer varias validaciones que son requeridas antes de guardar el usuario en la BD
-        // aunque mongo nos valida, no hay que dejarle todo el trabajo a mongo
-        // Otra cosa a saber es que cuando creamos el modelo "Usuario" por defecto la coneccion la nombre como su plural "Usuarios"
-
         res.status(201).json({
             ok: true,
-            msg: 'registro',
+            uid: usuario.id,
+            name: usuario.name,
             // Mostrar la informacion que recibimos del Body en la respuesta
             //name, email, password
         });   
