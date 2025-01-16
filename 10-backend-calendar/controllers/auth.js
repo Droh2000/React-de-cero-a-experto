@@ -7,13 +7,16 @@ const { response } = require('express');
 // Para obtener los errores de Express-validator (EStos se fueron al Custom middleware)
 const { validationResult } = require('express-validator');
 
+// Modelo que creamos con el Schema de Moongose
+const Usuario = require('../models/Usuario');
+
 //const crearUsuario = (req, res = express.response) => {
 // Request  ->  Esto es lo que la persona solicita (Aqui viene la informacion que se manda en el body)
 // Response ->  Es lo que nosotros Respondemos
-const crearUsuario = (req, res = response) => {
+const crearUsuario = async (req, res = response) => {
 
     // Asi extraemos la informacion
-    const { name, email, password } = req.body;
+    //const { name, email, password } = req.body;
     
     // Estos datos que tenemos (name, email, pasword) son datos obligatorios que deberiamos
     // de tener validado en el backend, en el Frontend por supuesto que los vamos a validar 
@@ -32,12 +35,32 @@ const crearUsuario = (req, res = response) => {
         //});
     //}
 
-    res.status(201).json({
-        ok: true,
-        msg: 'registro',
-        // Mostrar la informacion que recibimos del Body en la respuesta
-        name, email, password
-    });
+    // Siempre que menjemos BD hay que usar Try/catch
+    try {
+        // Al Schema le masnamos la informacion que viene el body, ya mongoose sabe la estructura y valores que tiene
+        const usuario = new Usuario( req.body );
+
+        // Para guardarlo en la Base de datos (Como es una promesa usamos async/await)
+        await usuario.save();
+
+        // Hay que hacer varias validaciones que son requeridas antes de guardar el usuario en la BD
+        // aunque mongo nos valida, no hay que dejarle todo el trabajo a mongo
+        // Otra cosa a saber es que cuando creamos el modelo "Usuario" por defecto la coneccion la nombre como su plural "Usuarios"
+
+        res.status(201).json({
+            ok: true,
+            msg: 'registro',
+            // Mostrar la informacion que recibimos del Body en la respuesta
+            //name, email, password
+        });   
+    } catch (error) {
+        console.log(error);// Esto es para mostrarlos como mensaje del servidor
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el Administrador'
+        });// Al cliente le vamos a mostrar este mensaje
+    }
+    // Si ocurre un error lo podremos ver en la consola donde ejecutamos el comendo para correr el backend
 }
 
 const loginUsuario = (req, res = response) => {
