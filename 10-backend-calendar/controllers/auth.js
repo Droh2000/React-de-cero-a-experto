@@ -10,6 +10,9 @@ const { validationResult } = require('express-validator');
 // Modelo que creamos con el Schema de Moongose
 const Usuario = require('../models/Usuario');
 
+// Para almacenar la constrasena Encriptada
+const bcrypt = require('bcryptjs');
+
 //const crearUsuario = (req, res = express.response) => {
 // Request  ->  Esto es lo que la persona solicita (Aqui viene la informacion que se manda en el body)
 // Response ->  Es lo que nosotros Respondemos
@@ -55,6 +58,13 @@ const crearUsuario = async (req, res = response) => {
 
         // Al Schema le masnamos la informacion que viene el body, ya mongoose sabe la estructura y valores que tiene
         usuario = new Usuario( req.body );
+
+        // Encriptar Constaseña
+        // Vamos a generar un pedazo de informacion aleatoria para encriprar de una sola via
+        // Como parametros le pasamos el numero de vueltas, entre mas quiere decir que mas recursos gastara en encriptarlo
+        // por defecto usa 10 vueltas
+        const salt = bcrypt.genSaltSync();
+        usuario.password = bcrypt.hashSync( password, salt );
 
         // Para guardarlo en la Base de datos (Como es una promesa usamos async/await)
         await usuario.save();
