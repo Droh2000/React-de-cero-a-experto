@@ -13,6 +13,8 @@ const Usuario = require('../models/Usuario');
 // Para almacenar la constrasena Encriptada
 const bcrypt = require('bcryptjs');
 
+const { generarJWT } = require('../helpers/jwt');
+
 //const crearUsuario = (req, res = express.response) => {
 // Request  ->  Esto es lo que la persona solicita (Aqui viene la informacion que se manda en el body)
 // Response ->  Es lo que nosotros Respondemos
@@ -69,10 +71,15 @@ const crearUsuario = async (req, res = response) => {
         // Para guardarlo en la Base de datos (Como es una promesa usamos async/await)
         await usuario.save();
 
+        // Generar el Token para que al crear el usuario este pueda autenticarse
+        // Para esta implementacion nos creamos la caarpeta de Helpers
+        const token = await generarJWT( usuario.id, usuario.name );
+
         res.status(201).json({
             ok: true,
             uid: usuario.id,
             name: usuario.name,
+            token
             // Mostrar la informacion que recibimos del Body en la respuesta
             //name, email, password
         });   
@@ -112,11 +119,17 @@ const loginUsuario = async (req, res = response) => {
         }
 
         // Generar el JWT
+        // Estos Tokens los usamos para manejar la sesion del usuario de forma pasiva para que cuando se hace
+        // una peticion tambien se le tiene que mandar el token permitiendole asi al usuario ejecutar la accion si 
+        // cuenta con los permisos
+        // Estos Tokens se dividen en tres partes: Header, Payload, La firma 
+        const token = await generarJWT( usuario.id, usuario.name );
 
         res.status(201).json({
             ok: true,
             uid: usuario.id,
             name: usuario.name,
+            token
         });
         
     } catch (error) {
@@ -128,6 +141,7 @@ const loginUsuario = async (req, res = response) => {
     }
 }
 
+// En caso que el token expiro le damos otro al usuario
 const revalidarToken = (req, res = response) => {
     res.json({
         ok: true,
