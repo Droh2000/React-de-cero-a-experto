@@ -86,15 +86,46 @@ const crearUsuario = async (req, res = response) => {
     // Si ocurre un error lo podremos ver en la consola donde ejecutamos el comendo para correr el backend
 }
 
-const loginUsuario = (req, res = response) => {
+const loginUsuario = async (req, res = response) => {
 
     const { email, password } = req.body;
 
-    res.status(201).json({
-        ok: true,
-        msg: 'login',
-        email, password
-    });
+    try {
+        // Primero hay que verificar si tenemos un usuario con ese Email
+        const usuario = await Usuario.findOne({ email });
+
+        if( !usuario ){ // Si el usuario no existe
+            return res.status(400).json({
+                ok: false,
+                msg: 'EL usuario no existe con ese correo'
+            });
+        }
+
+        // Confimar los passwords (Este metodo nos regresa True o False)
+        const validPassword = bcrypt.compareSync( password, usuario.password );
+
+        if( !validPassword ){
+            return res.status(400).json({
+                ok: false,
+                msg: 'Password Incorrecto'
+            });
+        }
+
+        // Generar el JWT
+
+        res.status(201).json({
+            ok: true,
+            uid: usuario.id,
+            name: usuario.name,
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el Administrador'
+        });
+    }
 }
 
 const revalidarToken = (req, res = response) => {
