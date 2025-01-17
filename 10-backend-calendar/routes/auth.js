@@ -17,6 +17,7 @@ const { crearUsuario, loginUsuario, revalidarToken } = require('../controllers/a
 // El check es el middleware que se va a encargar de validar un campo en particular
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
+const { validarJWT } = require('../middlewares/validar-jwt');
 
 // Crear un usuario 
 // Nos creamos un espacio reservado en la API ''/new 
@@ -45,8 +46,8 @@ router.post(
     ],
     loginUsuario);
 
-// Este es para renovar el token
-router.get('/renew', revalidarToken);
+// Este es para renovar el token (Le paamos el middleware que definimos)
+router.get('/renew', validarJWT ,revalidarToken);
 
 // Esta es la forma de Exportar en Node
 module.exports = router;

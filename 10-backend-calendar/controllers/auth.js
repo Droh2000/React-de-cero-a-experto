@@ -142,10 +142,25 @@ const loginUsuario = async (req, res = response) => {
 }
 
 // En caso que el token expiro le damos otro al usuario
-const revalidarToken = (req, res = response) => {
+const revalidarToken = async (req, res = response) => {
+
+    // En todas los endpoints de la aplicacion donde se requiera que el usuario este autenticado
+    // se rrequerira verificar si el JWT es valido
+    // Este metodo toma el JWT actual y regresara un nuevo JWT que el usuario resivira y se actualizara
+    // Para esto nos creamos en la carpeta middleware otro archivo porque se va a utiliar en dentro de las funciones 
+    // 'Check()' para que asi si no es valido no siga ejecutando las demas funciones
+
+    // Gracias al middleware de validar-jwt y la ruta de '/renew' es que en este punto obtenemos el uid y name
+    // con esto ya podemos generar un nuevo token
+    const { uid, name } = req;
+
+    // Generar un nuevo JWT y retornarlo en esta peticion
+    // no hace falta validarlo porque ya lo hicimos en el middleware
+    const token = await generarJWT( uid, name );
+
     res.json({
         ok: true,
-        msg: 'renew'
+        token
     });
 }
 
