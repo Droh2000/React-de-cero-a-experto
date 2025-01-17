@@ -14,6 +14,8 @@ require('dotenv').config();
 // Crear el servidor de Express
 const app = express();
 
+const cors = require('cors');
+
 // Configuracion de Rutas
 // Le ponemos el tipo de peticion que queremos
 // La funcion se dispara con los argumentos de Request y Response
@@ -30,6 +32,13 @@ const app = express();
 
 // Base de Datos
 dbConnection();
+
+// CORS
+// Con este podemos restringir cosas a la API ya que cuando se publique en internet
+// todas las personas podran hacer peticiones, podemos bloquear peticiones o a ciertas rutas
+// hay varias configuraciones, aqui aplicaremos una basica, como lo vamos a aplicar a todas 
+// las rutas las vamos a colocar aqui
+app.use(cors());
 
 // Directorio Publico
 // El "use()" en express es conocido como Middleware (Funcion que se ejecuta cuando se hace una peticion al servidor)
