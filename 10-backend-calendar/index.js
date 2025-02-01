@@ -57,6 +57,9 @@ app.use( express.json() );
 // En el 'requiere('Ruta de Archivo')' le decimos que todo lo que ese archivo vaya a exportar lo va a habilitar en la ruta especificada
 app.use('/api/auth', require('./routes/auth'));
 
+// Ruta de los eventos
+app.use('/api/events', require('./routes/events'))
+
 // Escuchar peticiones
 // El primer argumento es el puerto en donde correra y el segundo argumento es la funcion que se ejecuta
 // cuando el servidor este arrancando (Aqui usamos la variable de entorno y para ver los cambios tenemos que detener y volver a ejecutar la APP)
