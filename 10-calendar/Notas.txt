@@ -5,3 +5,7 @@ Para correr el backend nos ubicamos en el directorio de la carpeta:
 
 Para correr el Fronted React
     - yarn Dev
+
+TECNICA PARA EVITAR USAR THONKS
+ La idea es que todo nuestro codigo sea asyncrono, esto creara el codigo mas facil de mantener pero se tienen que crear hooks adicionales
+ 
