@@ -2,6 +2,7 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { calendarApi } from '../api';
+import { clearErrorMessage, onChecking, onLogin, onLogout } from '../store';
 
 
 export const useAuthStore = () => {
@@ -13,15 +14,36 @@ export const useAuthStore = () => {
     // Como nos tenemos que comunicar al backed tenemos que hacerlo de manera asyncrona
     const startLogin = async ({ email, password }) => {
         // Aqui nos conestamos a backend
+        // Por como programamos el Backend sabemos que si entramos dentro del Try se cumpli la autenticacion y en el Catch nos dira los mensajes de error
+
+        // Por lo que tenemos en el "authSlice.js" en el Reducer "onCheking" estamos revisando la autenticacion, asi que apliquemos los dispatch
+        // Esto pondra la aplicacion en un estado de carga
+        dispatch( onChecking );
         try{
             // Para hacer el login es una peticion POST al que le mandamos el segmento del URL que no tenemos configurado en nuestra variable de entorno
             // Como en la variable de entorno no terminamos con un slash le agregamos aqui el slash
             // En el BODY le mandamos los datos
-            const resp = await calendarApi.post('/auth', {
+            const { data } = await calendarApi.post('/auth', {
                 email, password
             });
+            // Establecemos el token en el LocalStorage
+            localStorage.setItem('token', data.token);
+            // Tambien nos generamos esto para saber en que momento nos creamos el token
+            // Con esto nos ahorramos hacer peticiones al backend para verificar si el token todabia es valido
+            localStorage.setItem('token-init-date', new Date().getTime() );
+
+            // Hacemos el dispatch de la accion onLogin del Store
+            // Este espera un payload es basicamente el Usuario pero nosotros en la respuesta bienen solo el Name y el uid
+            // Si todo sale bien esto es lo que se va a grabar
+            dispatch( onLogin({name: data.name, uid: data.uid}) );
+
         }catch(error){
-            console.log(error);
+            dispatch( onLogout('Credenciales incorrectas') );
+            // Como el procedimiento se esta ejecutando de manera asincrona le decimos que se dispare despues de unas 10 milesimas de segundos despues
+            setTimeout(() => {
+                dispatch( clearErrorMessage );
+            }, 10);
+
         }
     }
 
