@@ -9,6 +9,10 @@ const router = Router();
 
 const { getEventos, crearEvento, actualizarEvento, eliminarEvento } = require('../controllers/events');
 const { validarJWT } = require('../middlewares/validar-jwt');
+// Middleware par verificar que los datos se ingresan correctamente
+const {check } = require('express-validator');
+const {validarCampos} = require('../middlewares/validar-campos');
+const { isDate } = require('../helpers/isDate');
 
 // Hay que Agregar la validacion por JWT como esta validacion se aplica para todas las rutas
 // Podemos subir el midleware para no repetir la linea de codigo en todos los endpoints
@@ -19,7 +23,14 @@ router.use( validarJWT ); // Todas las peticiones tiene que pasar por este JWT, 
 router.get('/', getEventos );
 
 // Crear un nuevo evento
-router.post('/', crearEvento );
+router.post('/',[
+    check('title', 'El titulo es obligatorio').not().isEmpty(),
+    // Como Express no tiene validaciones para Fecha la vamos a crear nosotros 
+    // Dentro de la funcion "custom" le tenemos que envirar un Callback que validara el campo (Este Callback lo creamos en la carpeta Helpers)
+    check('start', 'Fecha de inicio es obligatoria').custom( isDate ),
+    check('end', 'Fecha final es obligatoria').custom( isDate ),
+    validarCampos // Con esta funcion si alguno de los check no se cumple no pasara la validacion
+], crearEvento );
 
 // Actualizar evento
 // Aqui le especificamos el campo ID pero para probarlo le mandamos cualquier cosa
