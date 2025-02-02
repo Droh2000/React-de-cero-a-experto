@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useAuthStore,useForm } from '../../hooks';
 import './LoginPage.css'; // Estos son los estilos propios del componente
+import Swal from 'sweetalert2';
 
 // Nos vamos a crear dos formas para maneter el formulario de Registro y del Login de manera independiente
 // y la ventaja con el customhook del formulario es que podemos tener tantas instancias de formulario como requiramos
@@ -18,7 +20,8 @@ const registerFormFields = {
 export const LoginPage = () => {
 
     // Tomamos la funcion para mandarle los datos a este customHook que se conecta con el Backend
-    const { startLogin } = useAuthStore();
+    // En el momento que el errorMessage cambie lo vamos a mostrar
+    const { startLogin, errorMessage } = useAuthStore();
 
     // creamos el estado usando el CustomHook que tendra los campos del login
     // Como el onInputChange lo vamos a requerir tambien para el Registaer no podemos tenemos dos con el mismo nombre
@@ -37,6 +40,15 @@ export const LoginPage = () => {
     const registerSubmit = ( event ) => {
         event.preventDefault();
     }
+
+    // Para estar de los cambios del errorMessage
+    useEffect(() => {
+        // Para mostrar el mensaje de error vamos a utilizar el Sweet Alert y solo lo mostramos si
+        // el mensaje de error no es null
+        if( errorMessage != undefined ){
+            Swal.fire('Error en la authenticacion', errorMessage, 'error');
+        }
+    }, [errorMessage]);
 
     return (
         <div className="container login-container">
