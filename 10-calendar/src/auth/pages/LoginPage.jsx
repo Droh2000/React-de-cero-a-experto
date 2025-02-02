@@ -1,4 +1,4 @@
-import { useForm } from '../../hooks';
+import { useAuthStore,useForm } from '../../hooks';
 import './LoginPage.css'; // Estos son los estilos propios del componente
 
 // Nos vamos a crear dos formas para maneter el formulario de Registro y del Login de manera independiente
@@ -17,6 +17,9 @@ const registerFormFields = {
 
 export const LoginPage = () => {
 
+    // Tomamos la funcion para mandarle los datos a este customHook que se conecta con el Backend
+    const { startLogin } = useAuthStore();
+
     // creamos el estado usando el CustomHook que tendra los campos del login
     // Como el onInputChange lo vamos a requerir tambien para el Registaer no podemos tenemos dos con el mismo nombre
     // asi que lo renombramos (EStos campos los conectamos a los elemento HTML correspondientes)
@@ -27,6 +30,8 @@ export const LoginPage = () => {
     // De "event" recibimos las propiedades que definimos en los objetos de formFields 
     const loginSubmit = ( event ) => {
         event.preventDefault();
+        // Del "event" obtenemos los campos de email y password
+        startLogin({ email: loginEmail, password: loginPassword });
     }
 
     const registerSubmit = ( event ) => {

@@ -8,4 +8,5 @@ Para correr el Fronted React
 
 TECNICA PARA EVITAR USAR THONKS
  La idea es que todo nuestro codigo sea asyncrono, esto creara el codigo mas facil de mantener pero se tienen que crear hooks adicionales
+ Asi que para esto dentro de la carpeta de Hooks nos creamos el "useAuthStore.js"
  
