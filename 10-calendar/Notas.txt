@@ -1,0 +1,7 @@
+En este punto terminamos El backend desarrollado en Node con la base de datos de Mongose
+
+Para correr el backend nos ubicamos en el directorio de la carpeta:
+    - npm run dev 
+
+Para correr el Fronted React
+    - yarn Dev
