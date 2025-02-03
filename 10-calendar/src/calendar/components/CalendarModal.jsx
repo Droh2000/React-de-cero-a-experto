@@ -125,6 +125,8 @@ export const CalendarModal = () => {
         // Vamos a poner obligatorio que tengamos el titulo de la nota
         if( formValues.title.length <= 0 ) return;
 
+        // Aqui tenemos la informacion que estamos mandando a llamar de startSavingEvent
+        // aqui mandamos toda la informacion del formulario pero lo mnadamos directamente al hook de "useCalendarStore"
         // Guardamos la nota
         await startSavingEvent( formValues );
 

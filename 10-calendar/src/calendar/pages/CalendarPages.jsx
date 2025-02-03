@@ -6,7 +6,7 @@ import { addHours } from 'date-fns';
 
 import { NavBar, CalendarEvent, CalendarModal, FabAddNew, FabDelete } from "../";
 import { localizer, getMessagesES } from '../../helpers';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUiStore, useCalendarStore } from '../../hooks';
 
 /*const events = [{
@@ -26,8 +26,9 @@ import { useUiStore, useCalendarStore } from '../../hooks';
 
 export const CalendarPages = () => {
 
+    // Cuando entramos a esta pantalla debemos empezar a cargar los eventos
     // Asi tomamos los datos de la funcion comentada de arriba pero ahora del Custom Hook
-    const {events, setActiveEvent} = useCalendarStore();
+    const {events, setActiveEvent, startLoadingEvents} = useCalendarStore();
 
     // Custom Hook para poder abrir el modal
     const { openDateModal } = useUiStore();
@@ -73,6 +74,11 @@ export const CalendarPages = () => {
         // Esto no es necesario hacerlo porque el calendario ya cambia cuando establecemos la propiedad en el Calendario
         setLastView( event );
     }
+
+    // el "startLoadingEvents" apenas se carge este componente lo vamos a disparar con un efecto
+    useEffect(()=>{
+        startLoadingEvents()
+    }, []);// MAndamos un arreglo de dependencias vacio porque solo lo queremos disparar una vez
 
     return (
         <>
