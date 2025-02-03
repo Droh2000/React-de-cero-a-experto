@@ -98,8 +98,14 @@ export const calendarSlice = createSlice({
         // En este caso si ya tenemos el evento localmente no le haremos nada, pero la logica podria ser que actualizemos
         // los que ya tenemos que en este caso no lo requerimos
       });
-
-    }
+    },
+    // Tenemos que limpiar todo lo que queda al hacer el logout para que quede el store en el estado inidical
+    // Como ya tenmos un logout para la parte del calendario le nombramos aqui Calendar
+    onLogoutCalendar: () => {
+      state.isLoadingEvents = true;
+      state.events = [];
+      state.activeEvent = null;
+    },
   },
 });
 
@@ -109,4 +115,5 @@ export const {
   onUpdateEvent,
   onDeleteEvent,
   onLoadEvents, // Este lo usamos en UseCalendarStore
+  onLogoutCalendar, // Este lo usamos en el useAuthStore
 } = calendarSlice.actions;
