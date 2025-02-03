@@ -21,7 +21,7 @@ export const LoginPage = () => {
 
     // Tomamos la funcion para mandarle los datos a este customHook que se conecta con el Backend
     // En el momento que el errorMessage cambie lo vamos a mostrar
-    const { startLogin, errorMessage } = useAuthStore();
+    const { startLogin, errorMessage, startRegister } = useAuthStore();
 
     // creamos el estado usando el CustomHook que tendra los campos del login
     // Como el onInputChange lo vamos a requerir tambien para el Registaer no podemos tenemos dos con el mismo nombre
@@ -39,6 +39,13 @@ export const LoginPage = () => {
 
     const registerSubmit = ( event ) => {
         event.preventDefault();
+
+        if( registerPassword !== registerPassword2 ){
+            Swal.fire('Error en el Registro', 'Contrasenas no son iguales', 'error');
+            return;
+        }
+
+        startRegister({ name: registerName, email: registerEmail, password: registerPassword });
     }
 
     // Para estar de los cambios del errorMessage

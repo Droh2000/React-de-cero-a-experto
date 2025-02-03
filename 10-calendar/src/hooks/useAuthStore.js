@@ -47,6 +47,26 @@ export const useAuthStore = () => {
         }
     }
 
+    const startRegister = async ({ name, email, password }) => {
+        dispatch( onChecking );
+        try{
+            const { data } = await calendarApi.post('/auth/new', {
+                name, email, password
+            });
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('token-init-date', new Date().getTime() );
+
+            dispatch( onLogin({name: data.name, uid: data.uid}) );
+
+        }catch(error){
+            // Del MSG obtenemos el error que ocurrio en el formulario (Este es el mensaje que nos manda el backend)
+            dispatch( onLogout( error.response.data?.msg ) );
+            setTimeout(() => {
+                dispatch( clearErrorMessage );
+            }, 10);
+        }
+    } 
+
     return {
         //* Propiedades
         status,
@@ -55,5 +75,6 @@ export const useAuthStore = () => {
 
         //* Metodos (Acciones que las personas van a poder llamar para interactuar con el Store)
         startLogin,
+        startRegister,
     }
 }
