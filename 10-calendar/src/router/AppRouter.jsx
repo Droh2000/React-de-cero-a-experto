@@ -34,19 +34,33 @@ export const AppRouter = () => {
                 // caso contrario vamos a crear las rutas de autenticacion esto va a hacer que si el usuario
                 // quiere llegar a una ruta que no exite no va a poder ingresar a esta
                 ( status === 'not-authenticated' )
-                ? <Route path='/auth/*' element={ <LoginPage/> }/> // Cualquier ruta que entre al Auth por eso es el astedisco va a mostrar el elemento indicado
-                : <Route path='/*' element={ <CalendarPages/> }/>  // Cualquier otra ruta que no sea la de arriba entonces entra al elemento que es el calendario
+                // Cuando ya estemos autenticados la ruta de "/auth/" deja de existir y cualquier rota nos lleva al CalendarPages
+                // asi que cambiamos la logia para cuando ingresemos al sistema no que queda en esta ruta
+                // para que solo estas rutas se pueda acceder si no esta autenticado el usuario
+                ? (
+                    <>
+                        <Route path='/auth/*' element={ <LoginPage/> }/>
+                        {/*
+                            Si se pone una ruta que no es conocida
+                            ESto se va a llegar a esta ruta
+                            Porque si no estubieramos autenticado solo apuntamos al /auth/
+                            entonces en este caso redireccionamos a esa ruta, ya si estamos autneticado se maneja
+                            la otra ruta de /*, la ruta de abajo con Navigate la ponemos como a prueba de fallos para evitar
+                            que el usuario entre a un lugar donde no queramos
+                        */}
+                        <Route path='/*' element={ <Navigate to="/auth/login" /> }/>
+                    </>
+                ) // Cualquier ruta que entre al Auth por eso es el astedisco va a mostrar el elemento indicado
+                : (
+                    <>
+                        {/* La ruta raiz de nuestra navegacion solo sera para el ingreso dentro de la aplicacion */}
+                        <Route path='/' element={ <CalendarPages/> }/>
+                        {/* Cualquier otra ruta va a navegar a "/"  */}
+                        <Route path='/*' element={ <Navigate to="/" /> }/>
+                    </>
+                )  // Cualquier otra ruta que no sea la de arriba entonces entra al elemento que es el calendario
 
             }
-            {/*
-                Si se pone una ruta que no es conocida
-                ESto se va a llegar a esta ruta
-                Porque si no estubieramos autenticado solo apuntamos al /auth/
-                entonces en este caso redireccionamos a esa ruta, ya si estamos autneticado se maneja
-                la otra ruta de /*, la ruta de abajo con Navigate la ponemos como a prueba de fallos para evitar
-                que el usuario entre a un lugar donde no queramos
-            */}
-            <Route path='/*' element={ <Navigate to="/auth/login" /> }/>
         </Routes>
         // Ya si quisieramos podriamos implementar rutas pribadas o publicas pero en este caso es una implementacion de otra forma
     )
