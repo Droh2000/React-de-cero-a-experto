@@ -67,6 +67,36 @@ export const useAuthStore = () => {
         }
     } 
 
+    // Si tenemos un JWT y no ah expirado entonces estamos autenticados, la idea es verificar ese Token
+    // Para verificar si el usario esta autenticado o no solo hay que llamar el endpoint de "/api/auth/renew"
+    // porque gracias al interceptor el "x-token" ya va a ir en el Header
+    // Esta funcion la vamos a mandar a llamar manualmente en un lugar especifico podriamos pensar en disparar esta funcion en 
+    // un useEffect el problema es que tendriamos que usar el Hook en todos los lugares donde vamos a obtener algo del store
+    const checkAuthToken = async () => {
+        // Obtenemos el token
+        const token = localStorage.getItem('token');
+
+        // Si no existe el token
+        if( !token ) return dispatch( onLogout() );
+
+        try{
+            // Hacemos una peticion al endpoint donde renovamos el token
+            // en data tenemos la informacion de la respuesta
+            const { data } = await calendarApi.get('auth/renew');
+
+            // Establecemos el nuevo token el localStorage
+            localStorage.setItem('token', data.token);
+
+            localStorage.setItem('token-init-date', new Date().getTime() );
+            dispatch( onLogin({name: data.name, uid: data.uid}) );
+        }catch(error){
+            localStorage.clear();
+            dispatch( onLogout() );
+        }
+        // Esta funcion la llamamos en el AppRouter
+    }
+
+
     return {
         //* Propiedades
         status,
@@ -76,5 +106,6 @@ export const useAuthStore = () => {
         //* Metodos (Acciones que las personas van a poder llamar para interactuar con el Store)
         startLogin,
         startRegister,
+        checkAuthToken,
     }
 }

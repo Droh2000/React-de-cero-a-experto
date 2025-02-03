@@ -1,21 +1,39 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from '../auth';
 import { CalendarPages } from '../calendar';
+import { useAuthStore } from '../hooks';
+import { useEffect } from 'react';
 
 // usamos el ReactRouter Doom para mostrar una pagina u otra de forma condicional
 export const AppRouter = () => {
 
     // Esta es la validacion (Dependiendo de esta vamos a mostrar una u otra ruta)
     // asi nos evitamos el paso de crear rutas privadas o publicas
-    const authStatus = 'authenticated'; // not-
+    //const authStatus = 'authenticated'; // not-authenticated
 
+    // En este punto tenemos que tomar la decicion si mostramos rutas publicas o rutas privadas
+    // Este "checkAuthToken" nesecitamos que se dipare antes de que muestre el login o la otra pantalla
+    const { status, checkAuthToken } = useAuthStore();
+
+    useEffect(()=>{
+        checkAuthToken();
+    }, []);
+
+    // Podriamos determinar si el status
+    if( status === 'checking' ){
+        return (
+            <h3>Cargando...</h3>
+        )
+    }
+
+    // Si esta autenticado o no el usario mostrara estas otras rutas
     return (
         <Routes>
             {
                 // En este caso si la condicion se cumple entonces vamos a mostrar la ruta para el login
                 // caso contrario vamos a crear las rutas de autenticacion esto va a hacer que si el usuario
                 // quiere llegar a una ruta que no exite no va a poder ingresar a esta
-                ( authStatus === 'not-authenticated' )
+                ( status === 'not-authenticated' )
                 ? <Route path='/auth/*' element={ <LoginPage/> }/> // Cualquier ruta que entre al Auth por eso es el astedisco va a mostrar el elemento indicado
                 : <Route path='/*' element={ <CalendarPages/> }/>  // Cualquier otra ruta que no sea la de arriba entonces entra al elemento que es el calendario
 
