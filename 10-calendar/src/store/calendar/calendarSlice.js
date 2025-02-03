@@ -55,7 +55,7 @@ export const calendarSlice = createSlice({
       // Con el MAP que nos crea un nuevo arreglo de las notas que tengamos en el arreglo events
       state.events = state.events.map( event => {
         // Si el ID que estamos iternado es igual a lo que se esta mandando en el payload
-        if( event._id === payload._id ){
+        if( event.id === payload.id ){
           return payload; // Este sera el nuevo Event con los nuevos datos
         }
 
@@ -70,7 +70,7 @@ export const calendarSlice = createSlice({
       // Aqui fisicamente lo vamos a eliminar del arreglo
       // Si no tenemos niguna nota activa no deberiamos de poder ejecutar este codigo
       if( state.activeEvent ){
-        state.events = state.events.filter( event => event._id !== state.activeEvent._id );
+        state.events = state.events.filter( event => event.id !== state.activeEvent.id );
         state.activeEvent = null; // Para que ya no tengamos niguna nota activa
       }
     },

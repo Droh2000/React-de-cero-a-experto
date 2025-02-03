@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { onAddNewEvent, onDeleteEvent, onLoadEvents, onSetActiveEvent, onUpdateEvent } from "../store";
 import { calendarApi } from "../api";
 import { convertEventsToDateEvents } from "../helpers";
+import Swal from 'sweetalert2';
 
 export const useCalendarStore = () => {
 
@@ -36,17 +37,25 @@ export const useCalendarStore = () => {
         // Aqui tenemos que llegar al backend y hacer el proceso ya sea si tenemos el ID entonces vamos a tener que hacer
         // es actualizarlo y si no entonces lo creamos
         // En el Body para la creacion de un evento estamos mandando se nos regresa el ID, ese lo vamos a tomar ponerlo en el evento a la hora de crearlo
+        try {
+            // Hay varios errores que pueden surgir pero la principal es que intentemos modificar eventos que no creamos osea que crearon otros usuarios
+            // Gracias al JWT tiene el payload con el Id del usuario y el backend sabe que usuario es basado en el Token
 
-        // Si la nota que le pasamos tiene el ID
-        if( calendarEvent._id ){
-            // Actualizando
-            dispatch( onUpdateEvent({...calendarEvent}) );
-        }else{
+            // Si la nota que le pasamos tiene el ID
+            if( calendarEvent.id ){
+                // Actualizando
+                // Llamamos el endpoint y los datos que tenemos que grabar
+                await calendarApi.put(`/events/${ calendarEvent.id }`, calendarEvent);
+
+                // Aqui le sobrescribimos el usuario que esta logeado actualmente
+                dispatch( onUpdateEvent({...calendarEvent, user}) );
+                return;
+            }
             // Creando
             // Insertamos en el arreglo de los eventos
             // El "calendarEvent" seria la nueva nota pero como no tiene el ID por el momento le creamos uno ficticio
             // esto sera temporal hasta que ya tengamos acceso al backend
-            //  dispatch( onAddNewEvent({ ...calendarEvent, _id: new Date().getTime() }) ); -> Ya no ocupamos ese ID porque ya se nos esta regresando en la Base de datos
+            //  dispatch( onAddNewEvent({ ...calendarEvent,_id: new Date().getTime() }) ); -> Ya no ocupamos ese ID porque ya se nos esta regresando en la Base de datos
             // El calendarApi ya viene preconfigurado con el Path asi que en la ruta solo madamos el segmento de 'events', ademes esta incrustando
             // mediante interceptores el token asi que no se manda a llamar nada mas
             // Solo le mandamos toda la informacion que nos pide el backend que es el "calendarEvent" este es el body de la informacion qu va a viajar en el Post 
@@ -54,6 +63,9 @@ export const useCalendarStore = () => {
             // En el ID le mandamos el id de la respuesta del evento creado pero ademas si revisamos el Body veremos que 
             // viene un usuario temporal que no es el real que esta autenticado asi que se lo tenemos que proporcionar tambien para que tenga el nuevo usuario real que esta conectado
             dispatch( onAddNewEvent({ ...calendarEvent, id: data.evento.id, user }) );
+        } catch (error) {
+            console.log(error);
+            Swal.fire('Error al guardar', error.response.data.msg, 'error');
         }
     }
 
