@@ -71,8 +71,16 @@ export const useCalendarStore = () => {
 
     // Para eliminar una nota activa (Se llama "start" porque vamos a empezar la eliminacion)
     // LA eliminacion se tendra que conectar al backend y este nos regresa una respuecta, osea sera una tarea asyncrona
-    const startDeleteEvent = () => {
-        dispatch( onDeleteEvent() );
+    const startDeleteEvent = async () => {
+        // Conectamos al backend para eliminar
+        try {
+            // En este archivo tenemos el "ActiveEvent" del Store de aqui sacamos el Id para saber cual evento eliminar
+            await calendarApi.delete(`/events/${ activeEvent.id }`);
+            dispatch( onDeleteEvent() );   
+        } catch (error) {
+            console.log(error);
+            Swal.fire('Error al eliminar', error.response.data.msg, 'error');
+        }
     }
     
     // Para a carga de los eventos que vamos a tener en el backend
