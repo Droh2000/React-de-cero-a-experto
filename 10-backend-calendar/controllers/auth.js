@@ -160,6 +160,9 @@ const revalidarToken = async (req, res = response) => {
 
     res.json({
         ok: true,
+        // Queremos mostrar esta informacion cuando se renueva el token
+        uid, 
+        name,
         token
     });
 }
