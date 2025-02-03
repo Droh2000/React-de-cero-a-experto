@@ -6,7 +6,7 @@
 // llaman las funciones que requieran
 
 import { useDispatch, useSelector } from "react-redux"
-import { onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent } from "../store";
+import { onAddNewEvent, onDeleteEvent, onLoadEvents, onSetActiveEvent, onUpdateEvent } from "../store";
 import { calendarApi } from "../api";
 import { convertEventsToDateEvents } from "../helpers";
 
@@ -74,6 +74,8 @@ export const useCalendarStore = () => {
             // Esta data viene en un objeto que se llama data.eventos, esto es lo que mandamos a llamar
             const events = convertEventsToDateEvents( data.evento );
 
+            // le mandamos los eventos que ya an sido procesados y tiene la fecha
+            dispatch(onLoadEvents(events));
             
         } catch (error) {
             console.log('Error cargando eventos');

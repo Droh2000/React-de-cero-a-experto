@@ -1,9 +1,9 @@
 // Nos vamos a crear otro espacio en el Store para manejar los eventos del calendario o saber los tipos de eventos que se ejecutan
 import { createSlice } from '@reduxjs/toolkit';
-import { addHours } from 'date-fns';
+// import { addHours } from 'date-fns';
 
 // Esto es temporal porque originalmente los vamos a obtener del backend
-const tempEvents = {
+/*const tempEvents = {
     // Aqui le especificamos un guion bajo antes del ID porque asi vendra en el backend que usaremos
     // Esto es temporal porque despues el Id vendra del backend
     _id: new Date().getTime(),
@@ -16,14 +16,19 @@ const tempEvents = {
         _id: '123',
         name: 'jose'
     } 
-}
+}*/
 
 export const calendarSlice = createSlice({
   name: 'calendar',
   initialState: {
+    // Cuando estamos informacion hay que indicarle al Store que estamos cargando para asi poder un loading o algun tipo de mensaje
+    // Este por defecto esta en True para que cuando creamos este "calendarSlice" requerimos empezar a cargar los eventos porque 
+    // todavia no estan disponibles
+    isLoadingEvents: true,
+
     // ¿Como queremos que luzca el estado inicial? Asi queemos como se mire el estado en el CalendarSlice
     events: [
-        tempEvents
+        //tempEvents
     ],
     // Para cuando hagamos click en uno de los cuadros azules queremos que aqui se indique que esta activada
     activeEvent: null
@@ -68,6 +73,32 @@ export const calendarSlice = createSlice({
         state.events = state.events.filter( event => event._id !== state.activeEvent._id );
         state.activeEvent = null; // Para que ya no tengamos niguna nota activa
       }
+    },
+    // No tenemos ninguna forma ni ningun reducer para poder modificar la informacion que tenems aqui
+    // Asi que vamos a crearnos un reducer y la accion (esto lo va a crear el slice por nosotros) para establecer los eventos
+    onLoadEvents: (state, {payload = []}) => {
+      // Aqui ya vamos a tener los eventos (Esta funcion la vamos a llamar cuando ya tengamos los eventos)
+      state.isLoadingEvents = false;
+
+      // El chiste esta en que esta funion la podamos reutilizar y cada vez que tengamos eventos nuevos puede que 
+      // tengamos que volver a llamar esta funcion (En cuanto definimos el reducer ya tenemos la accion)
+      // state.events = payload; -> Esto funcionaria para este proyecto pero queremos la reutilizacion
+
+      // Lo que vamos a hacer es recorrer el arreglo de payload y confirmar si el arreglo de eventos ya tenemos 
+      // ciertos eventos por el ID si ya es el caso no hacemos nada pero si no lo tenemos entonces lo insertamos
+      // Asi podremos llaamr varias veses esta funcion sin tener un impacto en el State
+      payload.forEach(event => {
+        // Bandera que nos indica si el evento que estamos iterando ya existe en el store
+        // Con la funcion "some()" si encuentra segun la condicion que le pasemos nos regresa un booleano
+        const exists = state.events.some( dbEvent => dbEvent.id === event.id );
+        // Si no existe agregamos el evento
+        if( !exists ){
+          state.events.push( event );
+        }
+        // En este caso si ya tenemos el evento localmente no le haremos nada, pero la logica podria ser que actualizemos
+        // los que ya tenemos que en este caso no lo requerimos
+      });
+
     }
   },
 });
@@ -76,5 +107,6 @@ export const {
   onSetActiveEvent,
   onAddNewEvent,
   onUpdateEvent,
-  onDeleteEvent
+  onDeleteEvent,
+  onLoadEvents, // Este lo usamos en UseCalendarStore
 } = calendarSlice.actions;
