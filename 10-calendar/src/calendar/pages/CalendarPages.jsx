@@ -7,7 +7,7 @@ import { addHours } from 'date-fns';
 import { NavBar, CalendarEvent, CalendarModal, FabAddNew, FabDelete } from "../";
 import { localizer, getMessagesES } from '../../helpers';
 import { useEffect, useState } from 'react';
-import { useUiStore, useCalendarStore } from '../../hooks';
+import { useUiStore, useCalendarStore, useAuthStore } from '../../hooks';
 
 /*const events = [{
     title: 'Cumple del Jefe',
@@ -38,12 +38,24 @@ export const CalendarPages = () => {
     // que dejamos la vista en la semana 
     const [ lastView, setLastView ] = useState(localStorage.getItem('lastview') || 'week');
 
+    // Lo que vamos a hacer ahora es colorear los eventos que el usuario creo para que sepa cuales puede editar
+    // y los otros eventos que estan creados por otros ususarios tengan otros colores
+    // Tenemos que saber cual es el usuario que esta actualmente logeado y saber cual es el usuario que creo la entrada
+    // En el parametro de "event" tenemos el Id del usuario que creo el evento y el usuario conectado lo tenemos
+    // en el useAuthStore
+    const { user } = useAuthStore();
+
     // Tenemos el evento, la fecha de inicio, la de finalizacion y una propiedad booleana
     const eventStyleGetter = ( event, start, end, isSelected ) => {
+
+        // Aqui verificamos si el evento es del usuario logeado o no 
+        // En base a aesto coloreamos en el objeto Style
+        const isMyEvent = ( user.uid===event.user._id ) || (user.uid === event.user.uid);
+
         // Dependiendo de lo que obtengamos aqui podemos cambiar el estilo
         // ya que estas propiedades que le msnadamos son las mismas que especificamos en "events"
         const style = {
-            backgroundColor: '#347CF7',
+            backgroundColor: isMyEvent ? '#347CF7' : '#465660',
             borderRadius: '0px',
             opacity: 0.8,
             color: 'white'
