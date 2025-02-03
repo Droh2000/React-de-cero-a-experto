@@ -96,6 +96,13 @@ export const useAuthStore = () => {
         // Esta funcion la llamamos en el AppRouter
     }
 
+    // Para cerrar la sesion
+    const startLogout = () => {
+        // Borramos el token
+        localStorage.clear();
+        // Establecemos los datos en el Store
+        dispatch( onLogout() );
+    }
 
     return {
         //* Propiedades
@@ -107,5 +114,6 @@ export const useAuthStore = () => {
         startLogin,
         startRegister,
         checkAuthToken,
+        startLogout,
     }
 }

@@ -27,6 +27,9 @@ export const AppRouter = () => {
     }
 
     // Si esta autenticado o no el usario mostrara estas otras rutas
+
+    // Por la forma en la que esta la logica aqui no importa si el usuario escribe la ruta de login cuando ingresa al sistema porque estas
+    // rutas de /auth/ ya no va a existir, solo existen las rotas donde se cumple la condicion (Este es el sistema de rutas)
     return (
         <Routes>
             {
